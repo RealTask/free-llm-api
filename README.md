@@ -1,3 +1,1 @@
-# Free LLM API - Comprehensive Provider Collection
-
-A curated collection of free LLM API providers...
+# Will be replaced with full content

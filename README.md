@@ -1,3 +1,3 @@
-# Test
+# Free LLM API - Comprehensive Provider Collection
 
-This is a test
+A curated collection...

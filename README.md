@@ -186,6 +186,6 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ---
 
-**Last Updated**: June 29, 2026
-**Maintainer**: [realtast](https://github.com/realtast)
+**Last Updated**: July 7, 2026
+**Maintainer**: [RealTask](https://github.com/RealTask)
 **Research Source**: Free AI Model APIs in 2026: Comprehensive Research Report

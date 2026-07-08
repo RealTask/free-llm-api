@@ -165,3 +165,162 @@ This collection is based on comprehensive research conducted in June 2026, consu
 - API pricing pages
 - Developer blogs and tutorials
 - Tech news articles
+
+## 📋 CLI Commands Reference
+
+### Installation
+```bash
+pip install -e .
+```
+
+### Quick Start
+```bash
+# Interactive mode
+free-llm --interactive
+free-llm -i
+
+# Simple chat
+free-llm chat "What is AI?"
+```
+
+### Chat Commands
+```bash
+# Basic chat
+free-llm chat "Your prompt here"
+
+# With specific provider and model
+free-llm chat "Tell me a story" --provider groq --model llama-3.1-8b-instant
+
+# Stream responses
+free-llm chat "Explain quantum computing" --stream
+
+# With temperature
+free-llm chat "Write a poem" --temperature 0.9
+
+# With max tokens
+free-llm chat "Summarize this article" --max-tokens 500
+```
+
+### Provider & Model Commands
+```bash
+# List all providers
+free-llm list
+
+# List all models
+free-llm list models
+
+# List models for a specific provider
+free-llm list models groq
+free-llm list models openrouter
+
+# Get provider information
+free-llm info groq
+
+# Get model information
+free-llm info groq llama-3.1-8b-instant
+```
+
+### Health & Status Commands
+```bash
+# Check all providers health
+free-llm health
+
+# Check specific provider health
+free-llm health groq
+free-llm health openrouter
+```
+
+### Benchmarking Commands
+```bash
+# Run benchmark on default provider
+free-llm benchmark
+
+# Benchmark specific provider
+free-llm benchmark --provider groq
+
+# Benchmark with specific type
+free-llm benchmark --provider groq --type latency
+free-llm benchmark --provider groq --type throughput
+free-llm benchmark --provider groq --type comprehensive
+
+# Benchmark specific model
+free-llm benchmark --provider groq --model llama-3.1-8b-instant --type comprehensive
+```
+
+### Configuration Commands
+```bash
+# Show current configuration
+free-llm config
+
+# Set default provider
+free-llm config set default_provider groq
+
+# Set default model
+free-llm config set default_model llama-3.1-8b-instant
+
+# Enable/disable caching
+free-llm config set enable_caching true
+free-llm config set enable_caching false
+
+# Enable/disable health monitoring
+free-llm config set enable_health_monitoring true
+
+# Set maximum retries
+free-llm config set max_retries 3
+
+# Set retry delay
+free-llm config set retry_delay 2.0
+```
+
+### Statistics Commands
+```bash
+# Show API statistics
+free-llm stats
+
+# Show detailed statistics
+free-llm stats --detailed
+```
+
+### Utility Commands
+```bash
+# Check version
+free-llm --version
+free-llm -v
+
+# Show help
+free-llm --help
+free-llm -h
+```
+
+### Interactive Mode Commands
+```
+$ free-llm --interactive
+
+Free LLM API - Interactive Mode
+============================================================
+
+Available commands:
+  chat [prompt]           - Start a chat session
+  list                   - List all providers and models
+  list models            - List all available models
+  list models [provider] - List models for a specific provider
+  info [provider]        - Show provider information
+  info [provider] [model] - Show model information
+  health                 - Check provider health status
+  health [provider]      - Check specific provider health
+  benchmark              - Run performance benchmarks
+  config                 - Show current configuration
+  config set [key] [val] - Set configuration value
+  stats                  - Show API usage statistics
+  help                   - Show this help message
+  exit                   - Exit interactive mode
+  quit                   - Exit interactive mode
+
+Examples:
+  free-llm> chat "What is machine learning?"
+  free-llm> chat "Write a story" --provider groq --stream
+  free-llm> list
+  free-llm> info groq
+  free-llm> health
+  free-llm> exit
+```

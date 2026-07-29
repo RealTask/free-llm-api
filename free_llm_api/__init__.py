@@ -29,7 +29,7 @@ Example usage:
         print(chunk, end="", flush=True)
 """
 
-from .core import (
+from core import (
     ProviderRegistry,
     ProviderDiscovery,
     StreamingResponse,
@@ -41,9 +41,9 @@ from .core import (
     ProviderOrchestrator,
     LoadBalancer,
     FallbackManager,
-    RoutingStrategy,
+    RoutingStrategyManager as RoutingStrategy,
 )
-from .middleware import (
+from middleware import (
     AdvancedRateLimiter,
     TokenBucketRateLimiter,
     SlidingWindowRateLimiter,
@@ -58,7 +58,7 @@ from .middleware import (
     ErrorHandler,
     CircuitBreaker,
 )
-from .services import (
+from services import (
     HealthMonitor,
     HealthCheckResult,
     HealthCheckConfig,

@@ -191,7 +191,7 @@ class CLIApp:
         print("  --interactive, -i   Start interactive mode")
         print("  --help, -h         Show this help message")
         print("\nExamples:")
-        print("  free-llm chat "What is AI?"")
+        print('  free-llm chat "What is AI?"')
         print("  free-llm list")
         print("  free-llm info groq")
         print("  free-llm --interactive")

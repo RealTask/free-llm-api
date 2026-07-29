@@ -12,8 +12,10 @@ from .orchestration import (
     ProviderOrchestrator,
     LoadBalancer,
     FallbackManager,
-    RoutingStrategy,
+    RoutingStrategyManager,
 )
+# Alias for backward compatibility
+RoutingStrategy = RoutingStrategyManager
 from .models import (
     ProviderMetadata,
     ModelMetadata,
@@ -42,6 +44,7 @@ __all__ = [
     "LoadBalancer",
     "FallbackManager",
     "RoutingStrategy",
+    "RoutingStrategyManager",
     
     # Models
     "ProviderMetadata",

@@ -1,4 +1,5 @@
 ```
+ code-analysis-completion-2d589
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -112,6 +113,33 @@ venv.bak/
 /site
 
 # mypy
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+.ENV
+.env
+.env.*
+.venv.bak/
+.python-version
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Testing
+.coverage
+coverage/
+htmlcov/
+.pytest_cache/
+main
 .mypy_cache/
 .dmypy.json
 dmypy.json
@@ -123,6 +151,12 @@ dmypy.json
 .vscode/
 .idea/
 
+ code-analysis-completion-2d589
+=======
+# Logs
+*.log
+
+ main
 # OS generated files
 .DS_Store
 .DS_Store?
@@ -131,4 +165,11 @@ dmypy.json
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
 ```

@@ -131,8 +131,23 @@ class ProviderRegistry:
             # Initialize metadata for each provider
             for name, provider_class in provider_classes.items():
                 try:
-                    # Get default config from provider
-                    config = provider_class.get_default_config()
+                    # Skip base provider classes
+                    if provider_class.__name__.startswith('Base'):
+                        logger.debug(f"Skipping base provider class: {provider_class.__name__}")
+                        continue
+                    
+                    # Get default config from provider class method
+                    try:
+                        config = provider_class.get_default_config()
+                    except (AttributeError, TypeError):
+                        # If get_default_config doesn't work, skip this provider
+                        logger.warning(f"Could not get config for {name}, skipping")
+                        continue
+                    
+                    # Validate config
+                    if config is None or not hasattr(config, 'category') or config.category is None:
+                        logger.warning(f"Invalid config for {name}, skipping")
+                        continue
                     
                     # Create metadata
                     metadata = ProviderMetadata(

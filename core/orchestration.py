@@ -17,7 +17,7 @@ from .models import (
     ProviderMetadata,
     ProviderStatus,
     LoadBalancingStrategy,
-    RoutingStrategy,
+    RoutingStrategy as ModelsRoutingStrategy,
     RequestContext,
     ResponseResult,
     HealthStatus,
@@ -391,7 +391,7 @@ class FallbackManager:
         return self.retry_delay
 
 
-class RoutingStrategy:
+class RoutingStrategyManager:
     """
     Routing strategy for directing requests to appropriate providers.
     
@@ -402,13 +402,13 @@ class RoutingStrategy:
     def __init__(
         self,
         registry: Optional[ProviderRegistry] = None,
-        strategy: RoutingStrategy = RoutingStrategy.COST_OPTIMIZED,
+        strategy: ModelsRoutingStrategy = ModelsRoutingStrategy.COST_OPTIMIZED,
     ):
         self.registry = registry or get_registry()
         self.strategy = strategy
         self._routing_rules: List[RoutingRule] = []
     
-    def set_strategy(self, strategy: RoutingStrategy):
+    def set_strategy(self, strategy: ModelsRoutingStrategy):
         """Set the routing strategy."""
         self.strategy = strategy
         logger.info(f"Routing strategy set to: {strategy.value}")
@@ -440,15 +440,15 @@ class RoutingStrategy:
                 return rule.provider
         
         # Apply strategy
-        if self.strategy == RoutingStrategy.RANDOM:
+        if self.strategy == ModelsRoutingStrategy.RANDOM:
             return self._random_route(context, providers)
-        elif self.strategy == RoutingStrategy.COST_OPTIMIZED:
+        elif self.strategy == ModelsRoutingStrategy.COST_OPTIMIZED:
             return self._cost_optimized_route(context, providers)
-        elif self.strategy == RoutingStrategy.PERFORMANCE_OPTIMIZED:
+        elif self.strategy == ModelsRoutingStrategy.PERFORMANCE_OPTIMIZED:
             return self._performance_optimized_route(context, providers)
-        elif self.strategy == RoutingStrategy.CAPABILITY_BASED:
+        elif self.strategy == ModelsRoutingStrategy.CAPABILITY_BASED:
             return self._capability_based_route(context, providers)
-        elif self.strategy == RoutingStrategy.GEOGRAPHIC:
+        elif self.strategy == ModelsRoutingStrategy.GEOGRAPHIC:
             return self._geographic_route(context, providers)
         else:
             return self._random_route(context, providers)
@@ -619,12 +619,12 @@ class ProviderOrchestrator:
         registry: Optional[ProviderRegistry] = None,
         load_balancer: Optional[LoadBalancer] = None,
         fallback_manager: Optional[FallbackManager] = None,
-        routing_strategy: Optional[RoutingStrategy] = None,
+        routing_strategy: Optional[RoutingStrategyManager] = None,
     ):
         self.registry = registry or get_registry()
         self.load_balancer = load_balancer or LoadBalancer(registry)
         self.fallback_manager = fallback_manager or FallbackManager(registry)
-        self.routing_strategy = routing_strategy or RoutingStrategy(registry)
+        self.routing_strategy = routing_strategy or RoutingStrategyManager(registry)
         self._request_history: List[RequestContext] = []
     
     async def initialize(self):

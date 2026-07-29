@@ -6,7 +6,7 @@ Rate limiting utilities for API providers.
 
 import time
 import asyncio
-from typing import Optional, Callable, Any
+from typing import Optional, Callable, Any, List, Dict
 from dataclasses import dataclass, field
 from collections import deque
 import logging

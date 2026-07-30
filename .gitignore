@@ -1,37 +1,35 @@
 ```
-# Python
+# Python cache
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
-env/
-venv/
-.venv/
-.ENV
-.python-version
+
+# Test cache
 .pytest_cache/
-.mypy_cache/
 .coverage
 coverage/
+htmlcov/
+
+# Dependencies
+venv/
+.venv/
+.env
+.env.local
+*.env.*
 
 # Build artifacts
-build/
 dist/
-*.egg
+build/
+target/
 *.egg-info/
-*.so
-*.dylib
-*.dll
 
 # Logs
 *.log
 
-# Environment
-.env
-.env.local
-.env.*
-!.env.example
+# OS generated files
+.DS_Store
+Thumbs.db
 
 # Editors
 .vscode/
@@ -39,17 +37,4 @@ dist/
 *.swp
 *.swo
 *.tmp
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Compressed
-*.zip
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.gz
-*.rar
-*.7z
 ```

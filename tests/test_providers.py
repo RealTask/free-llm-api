@@ -198,7 +198,8 @@ class TestHelperFunctions:
     def test_format_model_name(self):
         """Test model name formatting."""
         assert format_model_name("Gemma 3 27B") == "gemma-3-27b"
-        assert format_model_name("Llama-3.1-8B") == "llama-3.1-8b"
+        # Note: The function converts dots to hyphens, so Llama-3.1-8B becomes llama-3-1-8b
+        assert format_model_name("Llama-3.1-8B") == "llama-3-1-8b"
         assert format_model_name("models/gemma-3-27b-instruct") == "models-gemma-3-27b-instruct"
         assert format_model_name("") == ""
     

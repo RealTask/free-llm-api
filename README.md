@@ -133,7 +133,7 @@ llmapi-api/
 │
 ├── requirements.txt                # Python dependencies
 ├── setup.py                        # Package setup
-├── Makefile                        # Build automation (30+ targets)
+├── cli/commands.py                 # CLI commands (30+ llmapi commands)
 ├── LICENSE                         # MIT License
 └── README.md                       # This file
 ```
@@ -152,15 +152,15 @@ pip install -e .
 ### Option 2: Using Make (if available)
 ```bash
 # Install production dependencies
-make install
+llmapi install
 
 # Install in development mode with all dev dependencies
-make dev-install
+llmapi dev-install
 
 # Create virtual environment first
-make venv
+llmapi venv
 source venv/bin/activate
-make dev-install
+llmapi dev-install
 ```
 
 ## 🔧 Configuration
@@ -172,7 +172,7 @@ cp config/api_keys_template.py config/api_keys.py
 
 Or using Make:
 ```bash
-make setup-config
+llmapi setup-config
 ```
 
 2. Edit `config/api_keys.py` with your API keys for various providers.
@@ -255,35 +255,35 @@ This collection is based on comprehensive research conducted in June 2026, consu
 pip install -e .
 
 # Or using Make
-make dev-install
+llmapi dev-install
 ```
 
 ### Quick Start with Make
 ```bash
-# Show all available make commands
-make help
+# Show all available llmapi commands
+llmapi --help
 
 # Run the CLI tool
-make cli
+llmapi
 
 # Start interactive mode
-make interactive
+llmapi interactive
 
 # Check provider health
-make health
+llmapi health
 
 # Run benchmarks
-make benchmark
+llmapi benchmark
 
 # Show configuration
-make config
+llmapi config
 
 # Show statistics
-make stats
+llmapi stats
 
 # List providers and models
-make list-providers
-make list-models
+llmapi list
+llmapi list models
 ```
 
 ### Quick Start (Direct CLI)
@@ -438,98 +438,98 @@ Examples:
   llmapi> exit
 ```
 
-## 🛠️ Makefile Automation
+## 🛠️ CLI Commands Automation
 
-This project includes a comprehensive `Makefile` with **30+ targets** for common development and operational tasks. The Makefile provides a unified interface for installation, testing, building, running the server/CLI, utilities, and version management.
+This project includes comprehensive CLI commands with **30+ llmapi commands** for common development and operational tasks. The CLI provides a unified interface for installation, testing, building, running the server/CLI, utilities, and version management.
 
 ### Quick Reference Table
 
 | Category | Command | Description |
 |----------|---------|-------------|
-| **Help** | `make help` | Display all available commands |
-| **Install** | `make install` | Install production dependencies |
-| | `make dev-install` | Development mode with all dependencies |
-| | `make requirements` | Install/upgrade all requirements |
-| | `make venv` | Create virtual environment |
-| **Test** | `make test` | Run tests with pytest |
-| | `make test-cov` | Run tests with coverage report |
-| | `make lint` | Run linters (mypy, ruff) |
-| | `make format` | Format code with black and isort |
-| | `make check` | Run all checks (lint + test) |
-| **Build** | `make build` | Build package for distribution |
-| | `make clean` | Clean build artifacts and cache |
-| | `make publish` | Publish to PyPI |
-| | `make publish-test` | Publish to TestPyPI |
-| **Server** | `make server` | Start FastAPI web server on port 8000 |
-| | `make server-reload` | Start server with auto-reload |
-| **CLI** | `make cli` | Run CLI tool (show help) |
-| | `make interactive` | Start interactive CLI mode |
-| **Health** | `make health` | Check health of all providers |
-| **Benchmark** | `make benchmark` | Run benchmarks on default provider |
-| | `make benchmark-all` | Benchmark all providers comprehensively |
-| **Config** | `make config` | Show current configuration |
-| | `make setup-config` | Setup configuration from template |
-| **Stats** | `make stats` | Show API usage statistics |
-| **List** | `make list-providers` | List all available providers |
-| | `make list-models` | List all available models |
-| **CI/CD** | `make ci` | Run full CI pipeline (install, lint, test) |
-| **Version** | `make version` | Show current version |
-| | `make bump-patch` | Bump patch version (x.y.z → x.y.z+1) |
-| | `make bump-minor` | Bump minor version (x.y.z → x.y+1.0) |
-| | `make bump-major` | Bump major version (x.y.z → x+1.0.0) |
+| **Help** | `llmapi --help` | Display all available commands |
+| **Install** | `llmapi install` | Install production dependencies |
+| | `llmapi dev-install` | Development mode with all dependencies |
+| | `llmapi requirements` | Install/upgrade all requirements |
+| | `llmapi venv` | Create virtual environment |
+| **Test** | `llmapi test` | Run tests with pytest |
+| | `llmapi test-cov` | Run tests with coverage report |
+| | `llmapi lint` | Run linters (mypy, ruff) |
+| | `llmapi format` | Format code with black and isort |
+| | `llmapi check` | Run all checks (lint + test) |
+| **Build** | `llmapi build` | Build package for distribution |
+| | `llmapi clean` | Clean build artifacts and cache |
+| | `llmapi publish` | Publish to PyPI |
+| | `llmapi publish-test` | Publish to TestPyPI |
+| **Server** | `llmapi server` | Start FastAPI web server on port 8000 |
+| | `llmapi server-reload` | Start server with auto-reload |
+| **CLI** | `llmapi` | Run CLI tool (show help) |
+| | `llmapi interactive` | Start interactive CLI mode |
+| **Health** | `llmapi health` | Check health of all providers |
+| **Benchmark** | `llmapi benchmark` | Run benchmarks on default provider |
+| | `llmapi benchmark-all` | Benchmark all providers comprehensively |
+| **Config** | `llmapi config` | Show current configuration |
+| | `llmapi setup-config` | Setup configuration from template |
+| **Stats** | `llmapi stats` | Show API usage statistics |
+| **List** | `llmapi list` | List all available providers |
+| | `llmapi list models` | List all available models |
+| **CI/CD** | `llmapi ci` | Run full CI pipeline (install, lint, test) |
+| **Version** | `llmapi version` | Show current version |
+| | `llmapi bump-patch` | Bump patch version (x.y.z → x.y.z+1) |
+| | `llmapi bump-minor` | Bump minor version (x.y.z → x.y+1.0) |
+| | `llmapi bump-major` | Bump major version (x.y.z → x+1.0.0) |
 
 ### Complete Command List
 
 ```bash
 # Show all available commands
-make help
+llmapi --help
 
 # Install dependencies
-make install              # Production dependencies
-make dev-install          # Development mode with all dependencies
-make requirements         # Install/upgrade all requirements
+llmapi install              # Production dependencies
+llmapi dev-install          # Development mode with all dependencies
+llmapi requirements         # Install/upgrade all requirements
 
 # Testing and quality
-make test                 # Run tests
-make test-cov             # Run tests with coverage report
-make lint                 # Run linters (mypy, ruff)
-make format               # Format code with black and isort
-make check                # Run all checks (lint + test)
+llmapi test                 # Run tests
+llmapi test-cov             # Run tests with coverage report
+llmapi lint                 # Run linters (mypy, ruff)
+llmapi format               # Format code with black and isort
+llmapi check                # Run all checks (lint + test)
 
 # Build and distribution
-make build                # Build package for distribution
-make clean                # Clean build artifacts
-make publish              # Publish to PyPI
-make publish-test         # Publish to TestPyPI
+llmapi build                # Build package for distribution
+llmapi clean                # Clean build artifacts
+llmapi publish              # Publish to PyPI
+llmapi publish-test         # Publish to TestPyPI
 
 # Server and CLI
-make server               # Start FastAPI web server
-make server-reload        # Start server with auto-reload
-make cli                  # Run CLI tool
-make interactive          # Start interactive CLI mode
+llmapi server               # Start FastAPI web server
+llmapi server-reload        # Start server with auto-reload
+llmapi                  # Run CLI tool
+llmapi interactive          # Start interactive CLI mode
 
 # Utility commands
-make health               # Check provider health
-make benchmark            # Run benchmarks
-make benchmark-all        # Benchmark all providers
-make config               # Show configuration
-make stats                # Show API statistics
-make list-providers       # List all providers
-make list-models          # List all models
+llmapi health               # Check provider health
+llmapi benchmark            # Run benchmarks
+llmapi benchmark-all        # Benchmark all providers
+llmapi config               # Show configuration
+llmapi stats                # Show API statistics
+llmapi list       # List all providers
+llmapi list models          # List all models
 
 # Development helpers
-make setup-config         # Setup configuration from template
-make venv                 # Create virtual environment
-make activate             # Print activation command
+llmapi setup-config         # Setup configuration from template
+llmapi venv                 # Create virtual environment
+llmapi activate             # Print activation command
 
 # CI/CD
-make ci                   # Run full CI pipeline
+llmapi ci                   # Run full CI pipeline
 
 # Version management
-make version              # Show current version
-make bump-patch           # Bump patch version
-make bump-minor           # Bump minor version
-make bump-major           # Bump major version
+llmapi version              # Show current version
+llmapi bump-patch           # Bump patch version
+llmapi bump-minor           # Bump minor version
+llmapi bump-major           # Bump major version
 ```
 
 ## 🚀 Advanced Features
@@ -590,7 +590,7 @@ llmapi-api/
 │   ├── app.py                      # FastAPI application
 │   └── routes.py                   # API route definitions
 │   
-├── Makefile                        # Build automation (NEW!)
+├── cli/commands.py                 # CLI commands (NEW!)
 │   
 └── providers/                      # Existing provider implementations
 ```
@@ -1810,13 +1810,13 @@ llmapi --help                 # Show help
 pip install -e ".[all]"
 
 # Or using Make
-make dev-install
+llmapi dev-install
 
 # Start development server
 uvicorn free_llm_api.web.app:app --reload
 
 # Or using Make
-make server
+llmapi server
 
 # Start production server
 uvicorn free_llm_api.web.app:app --host 0.0.0.0 --port 8000 --workers 4
@@ -1887,10 +1887,10 @@ docker-compose up -d
 # View logs
 docker-compose logs -f
 
-# Using Make (if Docker Makefile targets are added)
-# make docker-build
-# make docker-run
-# make docker-logs
+# Note: Docker commands can be added to llmapi CLI as needed
+# llmapi docker-build
+# llmapi docker-run
+# llmapi docker-logs
 ```
 
 ### Kubernetes Commands
@@ -1910,8 +1910,8 @@ kubectl scale deployment llmapi-api --replicas=5
 # View logs
 kubectl logs -f deployment/llmapi-api
 
-# Note: Makefile targets for Kubernetes can be added as needed
-# Example: make k8s-deploy, make k8s-scale, make k8s-logs
+# Note: Kubernetes commands can be added to llmapi CLI as needed
+# Example: llmapi k8s-deploy, llmapi k8s-scale, llmapi k8s-logs
 ```
 
 ## 📝 Contributing

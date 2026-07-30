@@ -37,52 +37,104 @@ This repository provides a comprehensive catalog of free-tier and completely fre
 
 ```
 free-llm-api/
-├── providers/
-│   ├── llm/
-│   │   ├── google_ai_studio.py
-│   │   ├── groq.py
-│   │   ├── mistral.py
-│   │   ├── openrouter.py
-│   │   ├── cerebras.py
-│   │   ├── cohere.py
-│   │   ├── cloudflare.py
-│   │   ├── huggingface.py
-│   │   ├── nvidia.py
-│   │   ├── vercel.py
-│   │   └── github_models.py
-│   ├── image/
-│   │   ├── stable_diffusion.py
-│   │   ├── flux.py
-│   │   ├── google_gemini_image.py
-│   │   ├── adobe_firefly.py
-│   │   ├── midjourney.py
-│   │   ├── gpt_image.py
-│   │   └── imagen.py
-│   ├── speech/
-│   │   ├── groq_speech.py
-│   │   ├── google_tts.py
-│   │   └── whisper_local.py
-│   └── embeddings/
+├── free_llm_api/                    # Main package
+│   ├── __init__.py                 # Exports all public APIs
+│   └── api.py                      # Main FreeLLMAPI class
+│
+├── core/                           # Core functionality
+│   ├── __init__.py
+│   ├── models.py                   # Data models and types
+│   ├── provider_registry.py        # Provider discovery and management
+│   ├── streaming.py                # Async streaming support
+│   ├── caching.py                  # Multi-level caching
+│   └── orchestration.py            # Load balancing, fallback, routing
+│
+├── middleware/                     # Middleware components
+│   ├── __init__.py
+│   ├── rate_limiting.py            # Advanced rate limiting
+│   └── retry.py                    # Retry logic
+│
+├── services/                       # Background services
+│   ├── __init__.py
+│   ├── health_monitor.py           # Health monitoring
+│   └── benchmarking.py             # Benchmarking
+│
+├── cli/                            # Command-line interface
+│   ├── __init__.py
+│   ├── main.py                     # CLI main application
+│   └── commands.py                 # CLI commands implementation
+│
+├── web/                            # FastAPI web server
+│   ├── __init__.py
+│   ├── app.py                      # FastAPI application
+│   ├── routes.py                   # API route definitions
+│   ├── static/                     # Static files (CSS, JS)
+│   └── templates/                  # HTML templates
+│
+├── providers/                      # Provider implementations
+│   ├── __init__.py
+│   ├── base_provider.py            # Base provider class
+│   ├── llm/                        # LLM providers
+│   │   ├── __init__.py
+│   │   ├── google_ai_studio.py     # Google AI Studio (Gemma)
+│   │   ├── groq.py                 # Groq (Llama, Whisper)
+│   │   ├── mistral.py              # Mistral La Plateforme
+│   │   ├── openrouter.py           # OpenRouter (multi-model)
+│   │   ├── cerebras.py             # Cerebras Cloud
+│   │   ├── cohere.py               # Cohere Platform
+│   │   ├── cloudflare.py           # Cloudflare Workers AI
+│   │   ├── huggingface.py          # Hugging Face Inference
+│   │   ├── nvidia.py               # NVIDIA NIM
+│   │   ├── vercel.py               # Vercel AI SDK
+│   │   └── github_models.py        # GitHub Models
+│   ├── image/                      # Image generation providers
+│   │   ├── __init__.py
+│   │   ├── stable_diffusion.py     # Stable Diffusion 3.5
+│   │   ├── flux.py                 # FLUX models
+│   │   ├── google_gemini_image.py  # Gemini Image Generation
+│   │   ├── adobe_firefly.py        # Adobe Firefly
+│   │   ├── midjourney.py           # Midjourney (trial)
+│   │   ├── gpt_image.py            # GPT Image (trial)
+│   │   └── imagen.py               # Google Imagen
+│   ├── speech/                     # Speech providers
+│   │   ├── __init__.py
+│   │   ├── groq_speech.py          # Groq Whisper STT
+│   │   ├── google_tts.py           # Google TTS
+│   │   └── whisper_local.py        # Local Whisper
+│   └── embeddings/                 # Embedding providers
+│       ├── __init__.py
 │       ├── huggingface_embeddings.py
 │       ├── cloudflare_embeddings.py
 │       └── openrouter_embeddings.py
-├── models/
-│   ├── local_llms.py
-│   ├── hardware_recommendations.py
-│   └── ecosystem_tools.py
-├── trial_credits/
+│
+├── trial_credits/                  # Trial credit providers
+│   ├── __init__.py
 │   └── providers_with_credits.py
-├── config/
-│   ├── api_keys_template.py
-│   └── settings.py
-├── utils/
-│   ├── rate_limiter.py
-│   ├── retry_logic.py
-│   └── helpers.py
-├── tests/
-│   └── test_providers.py
-├── requirements.txt
-└── README.md
+│
+├── config/                         # Configuration
+│   ├── __init__.py
+│   ├── api_keys_template.py        # API keys template
+│   └── settings.py                 # Settings management
+│
+├── utils/                          # Utility functions
+│   ├── __init__.py
+│   ├── helpers.py                  # Helper functions
+│   ├── rate_limiter.py             # Rate limiting utilities
+│   └── retry_logic.py              # Retry logic utilities
+│
+├── tests/                          # Tests
+│   ├── __init__.py
+│   └── test_providers.py           # Provider tests
+│
+├── examples/                       # Usage examples
+│   ├── __init__.py
+│   ├── basic_usage.py              # Basic usage examples
+│   └── advanced_usage.py           # Advanced usage examples
+│
+├── requirements.txt                # Python dependencies
+├── setup.py                        # Package setup
+├── LICENSE                         # MIT License
+└── README.md                       # This file
 ```
 
 ## 🚀 Installation
@@ -904,41 +956,59 @@ free-llm-server
 
 ### API Endpoints
 
-#### Chat
+#### Web UI Routes (HTML Pages)
+
+- `GET /` - Home page
+- `GET /dashboard` - Dashboard with statistics
+- `GET /chat` - Chat interface
+- `GET /providers` - Providers list and management
+- `GET /models` - Models browser
+- `GET /health` - Health status page
+- `GET /benchmarks` - Benchmarking tools
+- `GET /settings` - Configuration settings
+
+#### Chat API
 
 - `POST /api/v1/chat/` - Send chat message
-- `POST /api/v1/chat/stream` - Stream chat response
+  - Body: `{messages, model?, provider?, temperature?, max_tokens?, use_cache?, stream?}`
+- `POST /api/v1/chat/stream` - Stream chat response (Server-Sent Events)
+  - Body: `{messages, model?, provider?, temperature?, max_tokens?}`
 
-#### Providers
+#### Providers API
 
 - `GET /api/v1/providers/` - List all providers
-- `GET /api/v1/providers/{provider}` - Get provider info
+  - Query: `category?`, `status?`
+- `GET /api/v1/providers/{provider}` - Get detailed provider information
 
-#### Models
+#### Models API
 
 - `GET /api/v1/models/` - List all models
-- `GET /api/v1/models/{provider}/{model}` - Get model info
+  - Query: `provider?`, `category?`, `capability?`
+- `GET /api/v1/models/{provider}/{model}` - Get detailed model information
 
-#### Health
+#### Health API
 
-- `GET /api/v1/health/` - Get health summary
-- `GET /api/v1/health/{provider}` - Get provider health
+- `GET /api/v1/health/` - Get health summary for all providers
+- `GET /api/v1/health/{provider}` - Get health status for specific provider
 
-#### Benchmark
+#### Benchmark API
 
 - `POST /api/v1/benchmark/` - Run benchmark
+  - Query: `provider?`, `model?`, `type?` (latency|throughput|quality|cost|comprehensive)
 
-#### Stats
+#### Statistics API
 
-- `GET /api/v1/stats/` - Get API statistics
+- `GET /api/v1/stats/` - Get API statistics (cache, rate limiting, provider stats)
 
-#### Embeddings
+#### Embeddings API
 
 - `POST /api/v1/embed/` - Generate embeddings
+  - Body: `{text, model?, provider?, use_cache?}`
 
-#### Images
+#### Image Generation API
 
-- `POST /api/v1/image/` - Generate image
+- `POST /api/v1/image/` - Generate image from prompt
+  - Body: `{prompt, model?, provider?, use_cache?}`
 
 ### Example Requests
 
@@ -1697,6 +1767,6 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ---
 
-**Last Updated**: July 8, 2026
+**Last Updated**: July 30, 2026
 **Maintainer**: [RealTask](https://github.com/RealTask)
 **Research Source**: Free AI Model APIs in 2026: Comprehensive Research Report

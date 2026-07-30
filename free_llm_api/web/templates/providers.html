@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Providers - Free LLM API{% endblock %}
+{% block active_page %}providers{% endblock %}
+
+{% block content %}
+<div class="animate-slide-up">
+    <div class="flex justify-between items-center mb-xl">
+        <h1>Providers</h1>
+        <div class="flex gap-md">
+            <select class="form-select" id="category-filter" onchange="filterProviders()" style="width: auto;">
+                <option value="">All Categories</option>
+                <option value="llm">LLM</option>
+                <option value="image">Image Generation</option>
+                <option value="speech">Speech</option>
+                <option value="embedding">Embeddings</option>
+            </select>
+            <button class="btn btn-primary" onclick="loadProviders()">↻ Refresh</button>
+        </div>
+    </div>
+    
+    <!-- Provider Grid -->
+    <div class="grid grid-cols-3" id="providers-grid">
+        <!-- Providers will be loaded here -->
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function loadProviders() {
+    const grid = document.getElementById('providers-grid');
+    grid.innerHTML = '<div class="text-center" style="grid-column: 1/-1;">Loading providers...</div>';
+    
+    try {
+        const response = await fetch('/api/v1/providers/');
+        const data = await response.json();
+        
+        if (!data.providers || data.providers.length === 0) {
+            grid.innerHTML = '<div class="text-center" style="grid-column: 1/-1;">No providers available</div>';
+            return;
+        }
+        
+        grid.innerHTML = data.providers.map(provider => {
+            const info = provider.info || {};
+            const status = info.status || 'unknown';
+            const statusClass = status === 'healthy' ? 'status-success' : status === 'degraded' ? 'status-warning' : 'status-error';
+            
+            return `
+                <div class="card provider-card">
+                    <div class="provider-logo">${(info.name || provider.name || '?').charAt(0).toUpperCase()}</div>
+                    <h3 class="card-title">${info.name || provider.name}</h3>
+                    <p class="card-subtitle mb-md">${info.category || 'LLM'}</p>
+                    
+                    <div class="mb-md">
+                        <div class="status-badge ${statusClass}">
+                            <span class="status-dot"></span>
+                            <span>${status}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="text-sm mb-md">
+                        <p><strong>Models:</strong> ${info.model_count || 'N/A'}</p>
+                        <p><strong>Rate Limit:</strong> ${info.rate_limit || 'N/A'}</p>
+                    </div>
+                    
+                    <div class="flex gap-sm">
+                        <button class="btn btn-secondary btn-sm" onclick="showProviderDetails('${provider.name}')">
+                            Details
+                        </button>
+                        <a href="/chat?provider=${provider.name}" class="btn btn-primary btn-sm">
+                            Use →
+                        </a>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+    } catch (error) {
+        console.error('Failed to load providers:', error);
+        grid.innerHTML = '<div class="text-center" style="grid-column: 1/-1;">Failed to load providers</div>';
+    }
+}
+
+function filterProviders() {
+    const category = document.getElementById('category-filter').value;
+    const cards = document.querySelectorAll('.provider-card');
+    
+    cards.forEach(card => {
+        const cardCategory = card.querySelector('.card-subtitle')?.textContent?.toLowerCase() || '';
+        if (!category || cardCategory.includes(category.toLowerCase())) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+async function showProviderDetails(providerName) {
+    try {
+        const response = await fetch(`/api/v1/providers/${providerName}`);
+        const info = await response.json();
+        
+        alert(`Provider: ${info.name}\nCategory: ${info.category}\nModels: ${JSON.stringify(info.models, null, 2)}\n\nRate Limit: ${info.rate_limit}\nStatus: ${info.status}`);
+    } catch (error) {
+        console.error('Failed to load provider details:', error);
+    }
+}
+
+// Load providers on page load
+document.addEventListener('DOMContentLoaded', loadProviders);
+</script>
+{% endblock %}

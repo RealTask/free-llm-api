@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Models - Free LLM API{% endblock %}
+{% block active_page %}models{% endblock %}
+
+{% block content %}
+<div class="animate-slide-up">
+    <div class="flex justify-between items-center mb-xl">
+        <h1>Available Models</h1>
+        <div class="flex gap-md">
+            <input type="text" class="form-input" id="search-input" placeholder="Search models..." 
+                oninput="filterModels()" style="width: 250px;">
+            <select class="form-select" id="provider-filter" onchange="filterModels()" style="width: auto;">
+                <option value="">All Providers</option>
+            </select>
+            <button class="btn btn-primary" onclick="loadModels()">↻ Refresh</button>
+        </div>
+    </div>
+    
+    <!-- Models Table -->
+    <div class="card">
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Model Name</th>
+                        <th>Provider</th>
+                        <th>Category</th>
+                        <th>Capabilities</th>
+                        <th>Context Length</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="models-table">
+                    <tr>
+                        <td colspan="7" class="text-center">Loading models...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let allModels = [];
+
+async function loadModels() {
+    const tbody = document.getElementById('models-table');
+    tbody.innerHTML = '<tr><td colspan="7" class="text-center">Loading models...</td></tr>';
+    
+    try {
+        const response = await fetch('/api/v1/models/');
+        const data = await response.json();
+        allModels = data.models || [];
+        
+        // Populate provider filter
+        const providers = [...new Set(allModels.map(m => m.provider))];
+        const providerFilter = document.getElementById('provider-filter');
+        providerFilter.innerHTML = '<option value="">All Providers</option>' +
+            providers.map(p => `<option value="${p}">${p}</option>`).join('');
+        
+        renderModels(allModels);
+        
+    } catch (error) {
+        console.error('Failed to load models:', error);
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center">Failed to load models</td></tr>';
+    }
+}
+
+function renderModels(models) {
+    const tbody = document.getElementById('models-table');
+    
+    if (models.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center">No models found</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = models.map(model => `
+        <tr>
+            <td><strong>${model.name || model.model}</strong></td>
+            <td>${model.provider || 'Unknown'}</td>
+            <td>${model.category || 'LLM'}</td>
+            <td>${(model.capabilities || []).join(', ') || 'N/A'}</td>
+            <td>${model.context_length || 'N/A'}</td>
+            <td>
+                <div class="status-badge status-success">
+                    <span class="status-dot"></span>
+                    <span>Available</span>
+                </div>
+            </td>
+            <td>
+                <a href="/chat?model=${encodeURIComponent(model.name || model.model)}&provider=${model.provider}" 
+                   class="btn btn-primary btn-sm">
+                    Use →
+                </a>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function filterModels() {
+    const search = document.getElementById('search-input').value.toLowerCase();
+    const provider = document.getElementById('provider-filter').value;
+    
+    let filtered = allModels;
+    
+    if (search) {
+        filtered = filtered.filter(m => 
+            (m.name || m.model || '').toLowerCase().includes(search) ||
+            (m.description || '').toLowerCase().includes(search)
+        );
+    }
+    
+    if (provider) {
+        filtered = filtered.filter(m => m.provider === provider);
+    }
+    
+    renderModels(filtered);
+}
+
+// Load models on page load
+document.addEventListener('DOMContentLoaded', loadModels);
+</script>
+{% endblock %}

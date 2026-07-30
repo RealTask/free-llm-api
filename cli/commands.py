@@ -742,3 +742,5 @@ COMMANDS = {
     "config": ConfigCommand,
     "stats": StatsCommand,
 }
+
+__all__ = ["COMMANDS", "CommandResult", "BaseCommand"]

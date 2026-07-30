@@ -1423,12 +1423,259 @@ The Free LLM API now provides a comprehensive, production-ready solution for acc
 - ✅ **Benchmarking** - Performance testing
 - ✅ **CLI Tool** - Interactive and non-interactive modes
 - ✅ **FastAPI Web Server** - REST API with streaming
+- ✅ **Premium Web UI & Dashboard** - Modern, minimalistic design with real-time analytics
 - ✅ **Rate Limiting** - Multiple algorithms
 - ✅ **Retry Logic** - Exponential backoff
 - ✅ **Circuit Breaker** - Fault tolerance
 - ✅ **Analytics** - Usage tracking
 
 This makes it suitable for production use in applications requiring reliable, scalable access to free AI providers.
+
+---
+
+## 🌐 Premium Web UI & Dashboard
+
+### Overview
+
+The Free LLM API includes a premium, polished, professional web interface with a minimalistic design theme. The dashboard provides real-time monitoring, chat interface, provider management, and comprehensive analytics.
+
+### Pages
+
+| Page | Route | Description |
+|------|-------|-------------|
+| Home | `/` | Landing page with feature overview |
+| Dashboard | `/dashboard` | Real-time analytics and system overview |
+| Chat | `/chat` | Interactive chat interface with streaming |
+| Providers | `/providers` | Browse and manage API providers |
+| Models | `/models` | Explore available models by category |
+| Health | `/health` | Monitor provider health status |
+| Benchmarks | `/benchmarks` | Performance comparison and metrics |
+| Settings | `/settings` | Configure API keys and preferences |
+
+### Running the Web Server
+
+```bash
+# Install dependencies
+pip install -e ".[all]"
+
+# Start the server
+uvicorn free_llm_api.web.app:app --reload --host 0.0.0.0 --port 8000
+
+# Or use the CLI entry point
+free-llm-server
+```
+
+### Access the Dashboard
+
+Once the server is running, open your browser and navigate to:
+
+- **Home**: http://localhost:8000/
+- **Dashboard**: http://localhost:8000/dashboard
+- **Chat**: http://localhost:8000/chat
+- **Providers**: http://localhost:8000/providers
+- **Models**: http://localhost:8000/models
+- **Health**: http://localhost:8000/health
+- **Benchmarks**: http://localhost:8000/benchmarks
+- **Settings**: http://localhost:8000/settings
+
+### Design Features
+
+- **Minimalistic Theme**: Clean, modern interface with focus on usability
+- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile
+- **Real-time Updates**: Live data refresh for health, stats, and benchmarks
+- **Dark/Light Mode**: Automatic theme detection with manual toggle
+- **Smooth Animations**: Polished transitions and micro-interactions
+- **Professional Typography**: Optimized font stack for readability
+- **Color Palette**: Carefully chosen colors for visual hierarchy
+- **Card-based Layout**: Organized information in digestible chunks
+
+### Dashboard Features
+
+- **System Overview**: Quick stats on providers, models, and requests
+- **Health Status Grid**: Visual indicators for all provider statuses
+- **Performance Charts**: Latency, throughput, and success rate graphs
+- **Recent Activity**: Log of recent API calls and their outcomes
+- **Quick Actions**: Fast access to common operations
+
+### Chat Interface
+
+- **Streaming Responses**: Real-time token-by-token display
+- **Provider Selection**: Choose from available providers and models
+- **Conversation History**: Maintain context across multiple messages
+- **Markdown Support**: Render formatted responses with code blocks
+- **Copy/Paste**: Easy export of responses
+- **Settings Panel**: Adjust temperature, max tokens, and more
+
+### Provider Management
+
+- **Status Indicators**: Green/yellow/red health status
+- **Rate Limit Info**: Display current limits and usage
+- **Model Browser**: Filter by category and capabilities
+- **Detailed Info**: Click through for comprehensive provider details
+
+### Benchmarking Tools
+
+- **Latency Tests**: Measure response times across providers
+- **Throughput Analysis**: Compare requests per second
+- **Quality Metrics**: Evaluate response quality scores
+- **Cost Comparison**: Analyze free tier value
+- **Export Results**: Download benchmark data as CSV/JSON
+
+---
+
+## 📋 Complete Command Reference
+
+### CLI Commands
+
+```bash
+# Installation
+pip install -e .
+
+# Interactive mode
+free-llm --interactive
+free-llm -i
+
+# Chat commands
+free-llm chat "Your prompt here"
+free-llm chat "Tell me a story" --provider groq --model llama-3.1-8b-instant
+free-llm chat "Explain quantum computing" --stream
+free-llm chat "Write a poem" --temperature 0.9
+free-llm chat "Summarize this article" --max-tokens 500
+
+# List commands
+free-llm list                      # List all providers
+free-llm list models               # List all models
+free-llm list models groq          # List models for specific provider
+
+# Info commands
+free-llm info groq                 # Provider information
+free-llm info groq llama-3.1-8b-instant  # Model information
+
+# Health commands
+free-llm health                    # Check all providers
+free-llm health groq               # Check specific provider
+
+# Benchmark commands
+free-llm benchmark                                    # Default benchmark
+free-llm benchmark --provider groq                    # Specific provider
+free-llm benchmark --provider groq --type latency     # Latency test
+free-llm benchmark --provider groq --type throughput  # Throughput test
+free-llm benchmark --provider groq --type comprehensive  # Full suite
+
+# Configuration commands
+free-llm config                              # Show configuration
+free-llm config set default_provider groq    # Set default provider
+free-llm config set default_model llama-3.1-8b-instant  # Set default model
+free-llm config set enable_caching true      # Enable caching
+free-llm config set enable_health_monitoring true  # Enable health checks
+free-llm config set max_retries 3            # Set retry count
+free-llm config set retry_delay 2.0          # Set retry delay
+
+# Statistics commands
+free-llm stats                  # Show API statistics
+free-llm stats --detailed       # Detailed statistics
+
+# Utility commands
+free-llm --version              # Check version
+free-llm --help                 # Show help
+```
+
+### Web Server Commands
+
+```bash
+# Install with all dependencies
+pip install -e ".[all]"
+
+# Start development server
+uvicorn free_llm_api.web.app:app --reload
+
+# Start production server
+uvicorn free_llm_api.web.app:app --host 0.0.0.0 --port 8000 --workers 4
+
+# Using CLI entry point
+free-llm-server
+
+# With custom host/port
+free-llm-server --host 0.0.0.0 --port 8080
+```
+
+### API Endpoints
+
+```bash
+# Chat endpoints
+curl -X POST http://localhost:8000/api/v1/chat/ \
+  -H "Content-Type: application/json" \
+  -d '{"messages": "What is AI?", "provider": "groq"}'
+
+curl -N http://localhost:8000/api/v1/chat/stream \
+  -H "Content-Type: application/json" \
+  -d '{"messages": "Tell me a story", "stream": true}'
+
+# Provider endpoints
+curl http://localhost:8000/api/v1/providers/
+curl http://localhost:8000/api/v1/providers/groq
+
+# Model endpoints
+curl http://localhost:8000/api/v1/models/
+curl http://localhost:8000/api/v1/models/groq/llama-3.1-8b-instant
+
+# Health endpoints
+curl http://localhost:8000/api/v1/health/
+curl http://localhost:8000/api/v1/health/groq
+
+# Benchmark endpoint
+curl -X POST "http://localhost:8000/api/v1/benchmark/?provider=groq&type=latency"
+
+# Stats endpoint
+curl http://localhost:8000/api/v1/stats/
+
+# Embedding endpoint
+curl -X POST http://localhost:8000/api/v1/embed/ \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Hello world", "provider": "openrouter"}'
+
+# Image generation endpoint
+curl -X POST http://localhost:8000/api/v1/image/ \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "A beautiful sunset", "provider": "stable_diffusion"}'
+```
+
+### Docker Commands
+
+```bash
+# Build Docker image
+docker build -t free-llm-api .
+
+# Run container
+docker run -p 8000:8000 \
+  -e GROQ_API_KEY=your_key \
+  -e OPENROUTER_API_KEY=your_key \
+  free-llm-api
+
+# Docker Compose
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+```
+
+### Kubernetes Commands
+
+```bash
+# Deploy to Kubernetes
+kubectl apply -f k8s/deployment.yaml
+kubectl apply -f k8s/service.yaml
+
+# Check status
+kubectl get pods
+kubectl get services
+
+# Scale deployment
+kubectl scale deployment free-llm-api --replicas=5
+
+# View logs
+kubectl logs -f deployment/free-llm-api
+```
 
 ## 📝 Contributing
 

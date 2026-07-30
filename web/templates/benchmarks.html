@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}Benchmarks - Free LLM API{% endblock %}
+{% block active_page %}benchmarks{% endblock %}
+
+{% block content %}
+<div class="animate-slide-up">
+    <div class="flex justify-between items-center mb-xl">
+        <h1>Performance Benchmarks</h1>
+        <button class="btn btn-primary" onclick="runBenchmark()">▶ Run Benchmark</button>
+    </div>
+    
+    <!-- Benchmark Controls -->
+    <div class="card mb-xl">
+        <h3 class="card-title mb-md">Benchmark Configuration</h3>
+        <div class="grid grid-cols-4">
+            <div class="form-group">
+                <label class="form-label">Provider</label>
+                <select class="form-select" id="benchmark-provider">
+                    <option value="">All Providers</option>
+                    <option value="groq">Groq</option>
+                    <option value="google_ai_studio">Google AI Studio</option>
+                    <option value="openrouter">OpenRouter</option>
+                    <option value="mistral">Mistral</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Model</label>
+                <select class="form-select" id="benchmark-model">
+                    <option value="">Default</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Test Type</label>
+                <select class="form-select" id="benchmark-type">
+                    <option value="latency">Latency</option>
+                    <option value="throughput">Throughput</option>
+                    <option value="comprehensive">Comprehensive</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">&nbsp;</label>
+                <button class="btn btn-primary" style="width: 100%;" onclick="runBenchmark()">
+                    Start Test
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Results -->
+    <div class="stats-grid mb-xl" id="benchmark-results" style="display: none;">
+        <div class="stat-card">
+            <div class="stat-value" id="avg-latency-result">-</div>
+            <div class="stat-label">Avg Latency</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="p95-latency-result">-</div>
+            <div class="stat-label">P95 Latency</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="tokens-per-sec">-</div>
+            <div class="stat-label">Tokens/sec</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="success-rate-result">-</div>
+            <div class="stat-label">Success Rate</div>
+        </div>
+    </div>
+    
+    <!-- Comparison Table -->
+    <div class="card">
+        <h3 class="card-title mb-md">Provider Comparison</h3>
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Provider</th>
+                        <th>Avg Latency</th>
+                        <th>P95 Latency</th>
+                        <th>Tokens/sec</th>
+                        <th>Success Rate</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody id="comparison-table">
+                    <tr>
+                        <td colspan="6" class="text-center">Run a benchmark to see comparison results</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function runBenchmark() {
+    const provider = document.getElementById('benchmark-provider').value;
+    const model = document.getElementById('benchmark-model').value;
+    const type = document.getElementById('benchmark-type').value;
+    
+    const btn = event.target;
+    btn.disabled = true;
+    btn.textContent = '⏳ Running...';
+    
+    try {
+        const params = new URLSearchParams();
+        if (provider) params.append('provider', provider);
+        if (model) params.append('model', model);
+        params.append('benchmark_type', type);
+        
+        const response = await fetch(`/api/v1/benchmark/?${params}`, {
+            method: 'POST'
+        });
+        const data = await response.json();
+        
+        displayResults(data.results || {});
+        
+    } catch (error) {
+        console.error('Benchmark failed:', error);
+        alert('Benchmark failed: ' + error.message);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '▶ Run Benchmark';
+    }
+}
+
+function displayResults(results) {
+    document.getElementById('benchmark-results').style.display = 'grid';
+    
+    // Update stats
+    if (results.avg_latency_ms) {
+        document.getElementById('avg-latency-result').textContent = Math.round(results.avg_latency_ms) + 'ms';
+    }
+    if (results.p95_latency_ms) {
+        document.getElementById('p95-latency-result').textContent = Math.round(results.p95_latency_ms) + 'ms';
+    }
+    if (results.tokens_per_second) {
+        document.getElementById('tokens-per-sec').textContent = results.tokens_per_second.toFixed(1);
+    }
+    if (results.success_rate !== undefined) {
+        document.getElementById('success-rate-result').textContent = (results.success_rate * 100).toFixed(1) + '%';
+    }
+    
+    // Update comparison table
+    const tbody = document.getElementById('comparison-table');
+    if (results.providers && Object.keys(results.providers).length > 0) {
+        tbody.innerHTML = Object.entries(results.providers).map(([name, stats]) => `
+            <tr>
+                <td><strong>${name}</strong></td>
+                <td>${Math.round(stats.avg_latency_ms || 0)}ms</td>
+                <td>${Math.round(stats.p95_latency_ms || 0)}ms</td>
+                <td>${(stats.tokens_per_second || 0).toFixed(1)}</td>
+                <td>${((stats.success_rate || 0) * 100).toFixed(1)}%</td>
+                <td>
+                    <div class="status-badge ${getScoreClass(stats.score)}">
+                        <span>${(stats.score || 0).toFixed(1)}</span>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+}
+
+function getScoreClass(score) {
+    if (score >= 80) return 'status-success';
+    if (score >= 60) return 'status-warning';
+    return 'status-error';
+}
+
+// Sample benchmark data for demonstration
+function loadSampleData() {
+    const sampleResults = {
+        avg_latency_ms: 245,
+        p95_latency_ms: 380,
+        tokens_per_second: 42.5,
+        success_rate: 0.98,
+        providers: {
+            groq: { avg_latency_ms: 120, p95_latency_ms: 180, tokens_per_second: 85.2, success_rate: 0.99, score: 92 },
+            google_ai_studio: { avg_latency_ms: 280, p95_latency_ms: 420, tokens_per_second: 35.8, success_rate: 0.97, score: 78 },
+            openrouter: { avg_latency_ms: 350, p95_latency_ms: 520, tokens_per_second: 28.4, success_rate: 0.96, score: 72 },
+            mistral: { avg_latency_ms: 230, p95_latency_ms: 340, tokens_per_second: 45.6, success_rate: 0.98, score: 85 }
+        }
+    };
+    
+    displayResults(sampleResults);
+}
+
+// Load sample data on page load for demo
+document.addEventListener('DOMContentLoaded', loadSampleData);
+</script>
+{% endblock %}

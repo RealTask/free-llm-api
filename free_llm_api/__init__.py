@@ -60,8 +60,8 @@ from services import (
     BenchmarkResult,
 )
 
-# Main API class
-from .api import FreeLLMAPI
+# Main API class and config
+from .api import FreeLLMAPI, FreeLLMAPIConfig, get_api, initialize_api
 
 __all__ = [
     # Core
@@ -96,6 +96,7 @@ __all__ = [
     
     # Main API
     "FreeLLMAPI",
+    "FreeLLMAPIConfig",
 ]
 
 # Version

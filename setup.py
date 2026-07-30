@@ -78,8 +78,8 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "free-llm=free_llm_api.cli.main:main",
-            "free-llm-server=free_llm_api.web.app:main",
+            "llmapi=free_llm_api.cli.main:main",
+            "llmapi-server=free_llm_api.web.app:main",
         ],
     },
     classifiers=[

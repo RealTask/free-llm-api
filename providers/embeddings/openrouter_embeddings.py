@@ -142,7 +142,7 @@ class OpenRouterEmbeddingsProvider(BaseEmbeddingProvider):
             api_key = os.getenv("OPENROUTER_API_KEY")
         
         super().__init__(api_key=api_key)
-        self.app_name = app_name or "free-llm-api"
+        self.app_name = app_name or "llmapi"
         self.session = httpx.AsyncClient()
     
     def _get_headers(self) -> Dict[str, str]:

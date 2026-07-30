@@ -421,7 +421,7 @@ class RequestContext:
     """Context for a request to a provider."""
     provider: str
     model: str
-    request_id: str = field(default_factory=lambda: f"req_{datetime.now().timestamp()}_{hashlib.md5(str(datetime.now()).encode()).hexdigest()[:8]}")
+    request_id: str = field(default_factory=lambda: f"req_{datetime.now().timestamp()}_{hashlib.sha256(str(datetime.now()).encode()).hexdigest()[:16]}")
     user_id: Optional[str] = None
     session_id: Optional[str] = None
     metadata: Dict[str, Any] = field(default_factory=dict)

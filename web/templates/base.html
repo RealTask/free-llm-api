@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free LLM API - Access free large language models from multiple providers">
+    <meta name="theme-color" content="#0a0a0a">
+    
+    <title>{% block title %}Free LLM API{% endblock %}</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+    {% block extra_css %}{% endblock %}
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%233b82f6' rx='20' ry='20' width='100' height='100'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-weight='bold'>LLM</text></svg>">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-brand">
+                <div class="header-logo">⚡</div>
+                <span class="header-title">Free LLM API</span>
+            </div>
+            
+            <nav class="header-nav">
+                <a href="/" class="header-nav-link">Home</a>
+                <a href="/dashboard" class="header-nav-link">Dashboard</a>
+                <a href="/providers" class="header-nav-link">Providers</a>
+                <a href="/models" class="header-nav-link">Models</a>
+                <a href="/chat" class="header-nav-link">Chat</a>
+                <a href="/docs" class="header-nav-link">API Docs</a>
+                <button class="btn btn-primary btn-sm" id="theme-toggle">🌓</button>
+            </nav>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <nav class="nav-menu">
+                    <div class="nav-item">
+                        <a href="/" class="nav-link {% if active_page == 'home' %}active{% endif %}">
+                            <span>🏠</span>
+                            <span>Overview</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/dashboard" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}">
+                            <span>📊</span>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/providers" class="nav-link {% if active_page == 'providers' %}active{% endif %}">
+                            <span>🔌</span>
+                            <span>Providers</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/models" class="nav-link {% if active_page == 'models' %}active{% endif %}">
+                            <span>🤖</span>
+                            <span>Models</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/chat" class="nav-link {% if active_page == 'chat' %}active{% endif %}">
+                            <span>💬</span>
+                            <span>Chat</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/benchmarks" class="nav-link {% if active_page == 'benchmarks' %}active{% endif %}">
+                            <span>⚡</span>
+                            <span>Benchmarks</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/health" class="nav-link {% if active_page == 'health' %}active{% endif %}">
+                            <span>❤️</span>
+                            <span>Health Status</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/settings" class="nav-link {% if active_page == 'settings' %}active{% endif %}">
+                            <span>⚙️</span>
+                            <span>Settings</span>
+                        </a>
+                    </div>
+                </nav>
+                
+                <div class="mt-lg pt-lg" style="border-top: 1px solid var(--color-border-subtle);">
+                    <div class="card" style="padding: var(--spacing-md);">
+                        <p class="text-sm mb-sm">API Status</p>
+                        <div class="status-badge status-success">
+                            <span class="status-dot"></span>
+                            <span>Operational</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            
+            <!-- Content Area -->
+            <div class="content-area {% block full_width %}{% endblock %}">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="/static/js/app.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

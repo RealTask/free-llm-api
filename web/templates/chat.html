@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+
+{% block title %}Chat - Free LLM API{% endblock %}
+{% block active_page %}chat{% endblock %}
+
+{% block full_width %}full-width{% endblock %}
+
+{% block content %}
+<div class="animate-slide-up" style="height: calc(100vh - var(--header-height) - 4rem);">
+    <div class="chat-container">
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chat-messages">
+            <div class="chat-message assistant">
+                👋 Hello! I'm your AI assistant. How can I help you today?
+            </div>
+        </div>
+        
+        <!-- Chat Input -->
+        <div class="chat-input-container">
+            <select class="form-select" id="provider-select" style="width: auto;">
+                <option value="">Auto</option>
+                <option value="groq">Groq</option>
+                <option value="google_ai_studio">Google AI</option>
+                <option value="openrouter">OpenRouter</option>
+                <option value="mistral">Mistral</option>
+            </select>
+            
+            <select class="form-select" id="model-select" style="width: auto;">
+                <option value="">Auto</option>
+            </select>
+            
+            <input 
+                type="text" 
+                class="chat-input" 
+                id="chat-input" 
+                placeholder="Type your message..."
+                autocomplete="off"
+            >
+            
+            <button class="btn btn-primary" id="send-btn" onclick="sendMessage()">
+                Send →
+            </button>
+            
+            <button class="btn btn-secondary" id="stream-toggle" onclick="toggleStreaming()" title="Toggle streaming">
+                ⚡
+            </button>
+        </div>
+    </div>
+    
+    <!-- Settings Panel -->
+    <div class="card mt-lg">
+        <h3 class="card-title mb-md">Chat Settings</h3>
+        <div class="grid grid-cols-4">
+            <div class="form-group">
+                <label class="form-label">Temperature</label>
+                <input type="range" class="form-input" id="temperature" min="0" max="2" step="0.1" value="0.7" 
+                    oninput="document.getElementById('temp-value').textContent = this.value">
+                <span class="text-xs" id="temp-value">0.7</span>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Max Tokens</label>
+                <input type="number" class="form-input" id="max-tokens" value="1024" min="1" max="8192">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Use Cache</label>
+                <select class="form-select" id="use-cache">
+                    <option value="true">Enabled</option>
+                    <option value="false">Disabled</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">&nbsp;</label>
+                <button class="btn btn-secondary" onclick="clearChat()" style="width: 100%;">
+                    🗑️ Clear Chat
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let isStreaming = true;
+let conversationHistory = [];
+
+// Auto-update models based on provider selection
+document.getElementById('provider-select').addEventListener('change', async function() {
+    const provider = this.value;
+    const modelSelect = document.getElementById('model-select');
+    
+    if (!provider) {
+        modelSelect.innerHTML = '<option value="">Auto</option>';
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/v1/models/?provider=${provider}`);
+        const data = await response.json();
+        
+        modelSelect.innerHTML = '<option value="">Auto</option>' + 
+            (data.models || []).map(m => `<option value="${m.name}">${m.name}</option>`).join('');
+    } catch (error) {
+        console.error('Failed to load models:', error);
+    }
+});
+
+async function sendMessage() {
+    const input = document.getElementById('chat-input');
+    const message = input.value.trim();
+    
+    if (!message) return;
+    
+    // Add user message to chat
+    addMessage(message, 'user');
+    conversationHistory.push({ role: 'user', content: message });
+    input.value = '';
+    
+    // Disable send button
+    const sendBtn = document.getElementById('send-btn');
+    sendBtn.disabled = true;
+    sendBtn.textContent = '⏳';
+    
+    try {
+        const provider = document.getElementById('provider-select').value;
+        const model = document.getElementById('model-select').value;
+        const temperature = parseFloat(document.getElementById('temperature').value);
+        const maxTokens = parseInt(document.getElementById('max-tokens').value);
+        const useCache = document.getElementById('use-cache').value === 'true';
+        
+        if (isStreaming) {
+            await streamResponse(provider, model, temperature, maxTokens, useCache);
+        } else {
+            await getResponse(provider, model, temperature, maxTokens, useCache);
+        }
+    } catch (error) {
+        addMessage(`Error: ${error.message}`, 'assistant');
+    } finally {
+        sendBtn.disabled = false;
+        sendBtn.textContent = 'Send →';
+    }
+}
+
+async function streamResponse(provider, model, temperature, maxTokens, useCache) {
+    const responseDiv = addMessage('', 'assistant');
+    
+    const response = await fetch('/api/v1/chat/stream', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            messages: conversationHistory,
+            provider,
+            model,
+            temperature,
+            max_tokens: maxTokens,
+            use_cache: useCache,
+            stream: true
+        })
+    });
+    
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let fullContent = '';
+    
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n');
+        
+        for (const line of lines) {
+            if (line.startsWith('data: ')) {
+                try {
+                    const data = JSON.parse(line.slice(6));
+                    fullContent += data.content || '';
+                    responseDiv.textContent = fullContent;
+                    scrollToBottom();
+                } catch (e) {}
+            }
+        }
+    }
+    
+    conversationHistory.push({ role: 'assistant', content: fullContent });
+}
+
+async function getResponse(provider, model, temperature, maxTokens, useCache) {
+    const response = await fetch('/api/v1/chat/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            messages: conversationHistory,
+            provider,
+            model,
+            temperature,
+            max_tokens: maxTokens,
+            use_cache: useCache
+        })
+    });
+    
+    const data = await response.json();
+    addMessage(data.content || data.error?.detail || 'Error occurred', 'assistant');
+    conversationHistory.push({ role: 'assistant', content: data.content });
+}
+
+function addMessage(content, role) {
+    const messagesContainer = document.getElementById('chat-messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chat-message ${role}`;
+    messageDiv.textContent = content;
+    messagesContainer.appendChild(messageDiv);
+    scrollToBottom();
+    return messageDiv;
+}
+
+function scrollToBottom() {
+    const messagesContainer = document.getElementById('chat-messages');
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+function clearChat() {
+    const messagesContainer = document.getElementById('chat-messages');
+    messagesContainer.innerHTML = '<div class="chat-message assistant">👋 Chat cleared. How can I help you?</div>';
+    conversationHistory = [];
+}
+
+function toggleStreaming() {
+    isStreaming = !isStreaming;
+    const btn = document.getElementById('stream-toggle');
+    btn.style.background = isStreaming ? 'var(--gradient-primary)' : 'transparent';
+    btn.style.color = isStreaming ? 'white' : 'var(--color-text-secondary)';
+}
+
+// Handle Enter key
+document.getElementById('chat-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+    }
+});
+
+// Load initial models
+document.getElementById('provider-select').dispatchEvent(new Event('change'));
+</script>
+{% endblock %}

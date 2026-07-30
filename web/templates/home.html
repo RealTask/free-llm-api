@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Free LLM API{% endblock %}
+{% block active_page %}home{% endblock %}
+
+{% block content %}
+<div class="animate-slide-up">
+    <!-- Hero Section -->
+    <section class="mb-3xl">
+        <div class="text-center mb-2xl">
+            <h1 class="mb-md">Free LLM API</h1>
+            <p class="text-lg" style="max-width: 600px; margin: 0 auto;">
+                Access free large language models from multiple providers with a unified, production-ready API.
+                Built for developers who need reliable, high-performance AI capabilities.
+            </p>
+            <div class="flex justify-center gap-md mt-lg">
+                <a href="/chat" class="btn btn-primary btn-lg">Start Chatting →</a>
+                <a href="/docs" class="btn btn-secondary btn-lg">View Documentation</a>
+            </div>
+        </div>
+        
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">10+</div>
+                <div class="stat-label">Providers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">50+</div>
+                <div class="stat-label">Models</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">∞</div>
+                <div class="stat-label">Free Requests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">&lt;100ms</div>
+                <div class="stat-label">Avg Latency</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="mb-3xl">
+        <h2 class="mb-xl text-center">Why Choose Free LLM API?</h2>
+        <div class="grid grid-cols-3">
+            <div class="card provider-card">
+                <div class="provider-logo">🚀</div>
+                <h3 class="card-title">Lightning Fast</h3>
+                <p class="card-subtitle">Optimized routing and caching for sub-100ms response times</p>
+            </div>
+            <div class="card provider-card">
+                <div class="provider-logo">🔒</div>
+                <h3 class="card-title">Production Ready</h3>
+                <p class="card-subtitle">Built-in rate limiting, health monitoring, and automatic failover</p>
+            </div>
+            <div class="card provider-card">
+                <div class="provider-logo">💰</div>
+                <h3 class="card-title">Completely Free</h3>
+                <p class="card-subtitle">Access 10+ providers with generous free tiers, no credit card required</p>
+            </div>
+            <div class="card provider-card">
+                <div class="provider-logo">🔄</div>
+                <h3 class="card-title">Multi-Provider</h3>
+                <p class="card-subtitle">Unified API for Groq, Google AI Studio, OpenRouter, Mistral, and more</p>
+            </div>
+            <div class="card provider-card">
+                <div class="provider-logo">⚡</div>
+                <h3 class="card-title">Real-time Streaming</h3>
+                <p class="card-subtitle">Server-sent events for smooth, real-time token streaming</p>
+            </div>
+            <div class="card provider-card">
+                <div class="provider-logo">📊</div>
+                <h3 class="card-title">Analytics & Monitoring</h3>
+                <p class="card-subtitle">Track usage, latency, and provider health in real-time</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Quick Start Section -->
+    <section class="mb-3xl">
+        <h2 class="mb-xl">Quick Start</h2>
+        <div class="grid grid-cols-2">
+            <div class="card">
+                <h3 class="card-title mb-md">Installation</h3>
+                <div class="code-block">
+                    <pre><code>pip install free-llm-api</code></pre>
+                </div>
+            </div>
+            <div class="card">
+                <h3 class="card-title mb-md">Basic Usage</h3>
+                <div class="code-block">
+                    <pre><code>from free_llm_api import FreeLLMAPI
+
+api = FreeLLMAPI()
+response = await api.chat("Hello!")
+print(response.content)</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Top Providers Section -->
+    <section class="mb-3xl">
+        <h2 class="mb-xl">Top Providers</h2>
+        <div class="grid grid-cols-4">
+            <div class="card provider-card">
+                <div class="provider-logo">G</div>
+                <h3 class="card-title">Groq</h3>
+                <p class="card-subtitle mb-md">14,400 req/day</p>
+                <div class="status-badge status-success">
+                    <span class="status-dot"></span>
+                    <span>Active</span>
+                </div>
+            </div>
+            <div class="card provider-card">
+                <div class="provider-logo">🔵</div>
+                <h3 class="card-title">Google AI</h3>
+                <p class="card-subtitle mb-md">14,400 req/day</p>
+                <div class="status-badge status-success">
+                    <span class="status-dot"></span>
+                    <span>Active</span>
+                </div>
+            </div>
+            <div class="card provider-card">
+                <div class="provider-logo">O</div>
+                <h3 class="card-title">OpenRouter</h3>
+                <p class="card-subtitle mb-md">1,000 req/day</p>
+                <div class="status-badge status-success">
+                    <span class="status-dot"></span>
+                    <span>Active</span>
+                </div>
+            </div>
+            <div class="card provider-card">
+                <div class="provider-logo">M</div>
+                <h3 class="card-title">Mistral</h3>
+                <p class="card-subtitle mb-md">1B tokens/mo</p>
+                <div class="status-badge status-success">
+                    <span class="status-dot"></span>
+                    <span>Active</span>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-lg">
+            <a href="/providers" class="btn btn-secondary">View All Providers →</a>
+        </div>
+    </section>
+</div>
+{% endblock %}

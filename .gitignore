@@ -1,1 +1,39 @@
-Nothing should be ignored based on the provided file changes, as they only include source code files (.py) without any build artifacts, dependencies, or temporary files.
+```
+# Python compiled files
+*.pyc
+__pycache__/
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Environment files
+.env
+.env.local
+*.env.*
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dependencies
+.venv/
+venv/
+node_modules/
+
+# Build artifacts
+dist/
+build/
+target/
+
+# Coverage reports
+.coverage
+coverage/
+htmlcov/
+
+# Cache directories
+.mypy_cache/
+.pytest_cache/
+```

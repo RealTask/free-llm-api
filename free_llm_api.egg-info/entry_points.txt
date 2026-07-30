@@ -1,0 +1,3 @@
+[console_scripts]
+free-llm = free_llm_api.cli.main:main
+free-llm-server = free_llm_api.web.app:main

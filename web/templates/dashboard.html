@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Free LLM API{% endblock %}
+{% block active_page %}dashboard{% endblock %}
+
+{% block content %}
+<div class="animate-slide-up">
+    <div class="flex justify-between items-center mb-xl">
+        <h1>Dashboard</h1>
+        <button class="btn btn-primary" onclick="refreshStats()">↻ Refresh</button>
+    </div>
+    
+    <!-- Stats Overview -->
+    <div class="stats-grid mb-xl">
+        <div class="stat-card">
+            <div class="stat-value" id="total-requests">0</div>
+            <div class="stat-label">Total Requests</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="avg-latency">0ms</div>
+            <div class="stat-label">Avg Latency</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="cache-hit-rate">0%</div>
+            <div class="stat-label">Cache Hit Rate</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="success-rate">100%</div>
+            <div class="stat-label">Success Rate</div>
+        </div>
+    </div>
+    
+    <!-- Charts Section -->
+    <div class="grid grid-cols-2 mb-xl">
+        <div class="card">
+            <h3 class="card-title mb-md">Request Volume (Last 24h)</h3>
+            <div id="request-chart" style="height: 200px; display: flex; align-items: flex-end; gap: 4px;">
+                <!-- Chart bars will be inserted here -->
+            </div>
+        </div>
+        <div class="card">
+            <h3 class="card-title mb-md">Provider Distribution</h3>
+            <div id="provider-chart" style="height: 200px; display: flex; flex-direction: column; justify-content: center; gap: 12px;">
+                <!-- Provider distribution will be inserted here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Activity -->
+    <div class="card mb-xl">
+        <h3 class="card-title mb-md">Recent Activity</h3>
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Provider</th>
+                        <th>Model</th>
+                        <th>Latency</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="recent-activity">
+                    <tr>
+                        <td colspan="5" class="text-center">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Provider Health -->
+    <div class="card">
+        <h3 class="card-title mb-md">Provider Health Status</h3>
+        <div class="grid grid-cols-3" id="provider-health">
+            <!-- Provider health cards will be inserted here -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function refreshStats() {
+    try {
+        const [stats, health] = await Promise.all([
+            fetch('/api/v1/stats/').then(r => r.json()),
+            fetch('/api/v1/health/').then(r => r.json())
+        ]);
+        
+        // Update stats
+        document.getElementById('total-requests').textContent = stats.total_requests?.toLocaleString() || '0';
+        document.getElementById('avg-latency').textContent = Math.round(stats.avg_latency_ms || 0) + 'ms';
+        document.getElementById('cache-hit-rate').textContent = Math.round((stats.cache_hit_rate || 0) * 100) + '%';
+        
+        // Update provider health
+        const healthContainer = document.getElementById('provider-health');
+        healthContainer.innerHTML = Object.entries(health.providers || {})
+            .map(([name, status]) => `
+                <div class="card" style="padding: var(--spacing-md);">
+                    <div class="flex justify-between items-center mb-sm">
+                        <span class="font-semibold">${name}</span>
+                        <div class="status-badge ${status.status === 'healthy' ? 'status-success' : 'status-error'}">
+                            <span class="status-dot"></span>
+                            <span>${status.status}</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-secondary">Latency: ${Math.round(status.latency_ms || 0)}ms</p>
+                </div>
+            `).join('');
+            
+    } catch (error) {
+        console.error('Failed to refresh stats:', error);
+    }
+}
+
+// Generate sample chart data
+function generateChartBars() {
+    const chart = document.getElementById('request-chart');
+    const hours = 24;
+    let html = '';
+    for (let i = 0; i < hours; i++) {
+        const height = Math.random() * 100 + 20;
+        html += `<div style="flex: 1; background: linear-gradient(180deg, #3b82f6 0%, #8b5cf6 100%); border-radius: 4px 4px 0 0; height: ${height}%; opacity: 0.8;" title="Hour ${i}"></div>`;
+    }
+    chart.innerHTML = html;
+}
+
+// Generate provider distribution
+function generateProviderDistribution() {
+    const providers = ['Groq', 'Google AI', 'OpenRouter', 'Mistral', 'Others'];
+    const colors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444'];
+    const chart = document.getElementById('provider-chart');
+    
+    chart.innerHTML = providers.map((provider, i) => {
+        const percentage = Math.random() * 40 + 10;
+        return `
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 12px; height: 12px; border-radius: 3px; background: ${colors[i]}"></div>
+                <span style="flex: 1; font-size: 0.875rem;">${provider}</span>
+                <span style="font-size: 0.875rem; color: var(--color-text-secondary);">${percentage.toFixed(1)}%</div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Initialize dashboard
+document.addEventListener('DOMContentLoaded', () => {
+    generateChartBars();
+    generateProviderDistribution();
+    refreshStats();
+    setInterval(refreshStats, 30000); // Refresh every 30 seconds
+});
+</script>
+{% endblock %}

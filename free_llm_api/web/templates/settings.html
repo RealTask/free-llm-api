@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Free LLM API{% endblock %}
+{% block active_page %}settings{% endblock %}
+
+{% block content %}
+<div class="animate-slide-up">
+    <h1 class="mb-xl">Settings</h1>
+    
+    <!-- API Configuration -->
+    <div class="card mb-xl">
+        <h3 class="card-title mb-md">API Configuration</h3>
+        <div class="grid grid-cols-2">
+            <div class="form-group">
+                <label class="form-label">Default Provider</label>
+                <select class="form-select" id="default-provider">
+                    <option value="">Auto (Smart Routing)</option>
+                    <option value="groq">Groq</option>
+                    <option value="google_ai_studio">Google AI Studio</option>
+                    <option value="openrouter">OpenRouter</option>
+                    <option value="mistral">Mistral</option>
+                    <option value="cerebras">Cerebras</option>
+                    <option value="cohere">Cohere</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Default Model</label>
+                <select class="form-select" id="default-model">
+                    <option value="">Auto</option>
+                    <option value="llama-3.1-8b-instant">Llama 3.1 8B (Groq)</option>
+                    <option value="gemma-3-27b">Gemma 3 27B (Google)</option>
+                    <option value="mistral-small">Mistral Small</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Max Retries</label>
+                <input type="number" class="form-input" id="max-retries" value="3" min="0" max="10">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Retry Delay (seconds)</label>
+                <input type="number" class="form-input" id="retry-delay" value="2.0" step="0.5" min="0.5" max="30">
+            </div>
+        </div>
+        <button class="btn btn-primary mt-md" onclick="saveApiSettings()">Save Configuration</button>
+    </div>
+    
+    <!-- Caching Settings -->
+    <div class="card mb-xl">
+        <h3 class="card-title mb-md">Caching</h3>
+        <div class="grid grid-cols-2">
+            <div class="form-group">
+                <label class="form-label">Enable Response Caching</label>
+                <select class="form-select" id="enable-caching">
+                    <option value="true">Enabled</option>
+                    <option value="false">Disabled</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Cache TTL (seconds)</label>
+                <input type="number" class="form-input" id="cache-ttl" value="3600" min="60" max="86400">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Enable Embedding Cache</label>
+                <select class="form-select" id="enable-embedding-cache">
+                    <option value="true">Enabled</option>
+                    <option value="false">Disabled</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Enable Image Cache</label>
+                <select class="form-select" id="enable-image-cache">
+                    <option value="true">Enabled</option>
+                    <option value="false">Disabled</option>
+                </select>
+            </div>
+        </div>
+        <button class="btn btn-secondary mt-md" onclick="clearCache()">🗑️ Clear All Cache</button>
+    </div>
+    
+    <!-- Health Monitoring -->
+    <div class="card mb-xl">
+        <h3 class="card-title mb-md">Health Monitoring</h3>
+        <div class="grid grid-cols-2">
+            <div class="form-group">
+                <label class="form-label">Enable Health Checks</label>
+                <select class="form-select" id="enable-health-monitoring">
+                    <option value="true">Enabled</option>
+                    <option value="false">Disabled</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Check Interval (seconds)</label>
+                <input type="number" class="form-input" id="health-check-interval" value="60" min="10" max="600">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Enable Auto-Fallback</label>
+                <select class="form-select" id="enable-auto-fallback">
+                    <option value="true">Enabled</option>
+                    <option value="false">Disabled</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Fallback Threshold (ms)</label>
+                <input type="number" class="form-input" id="fallback-threshold" value="5000" min="1000" max="30000">
+            </div>
+        </div>
+    </div>
+    
+    <!-- UI Preferences -->
+    <div class="card mb-xl">
+        <h3 class="card-title mb-md">UI Preferences</h3>
+        <div class="grid grid-cols-2">
+            <div class="form-group">
+                <label class="form-label">Theme</label>
+                <select class="form-select" id="ui-theme" onchange="updateTheme(this.value)">
+                    <option value="dark">Dark</option>
+                    <option value="light">Light</option>
+                    <option value="system">System</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Sidebar Position</label>
+                <select class="form-select" id="sidebar-position">
+                    <option value="left">Left</option>
+                    <option value="right">Right</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Compact Mode</label>
+                <select class="form-select" id="compact-mode">
+                    <option value="false">Disabled</option>
+                    <option value="true">Enabled</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Show Tooltips</label>
+                <select class="form-select" id="show-tooltips">
+                    <option value="true">Enabled</option>
+                    <option value="false">Disabled</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Danger Zone -->
+    <div class="card" style="border-color: var(--color-accent-error);">
+        <h3 class="card-title mb-md" style="color: var(--color-accent-error);">⚠️ Danger Zone</h3>
+        <p class="text-sm mb-md">These actions cannot be undone. Please be careful.</p>
+        <div class="flex gap-md">
+            <button class="btn btn-secondary" style="border-color: var(--color-accent-error); color: var(--color-accent-error);" onclick="resetAllSettings()">
+                Reset All Settings
+            </button>
+            <button class="btn btn-secondary" style="border-color: var(--color-accent-error); color: var(--color-accent-error);" onclick="clearAllData()">
+                Clear All Data
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Load saved settings
+document.addEventListener('DOMContentLoaded', () => {
+    const settings = JSON.parse(localStorage.getItem('free-llm-settings') || '{}');
+    
+    // Apply saved settings
+    Object.entries(settings).forEach(([key, value]) => {
+        const element = document.getElementById(key.replace(/_/g, '-'));
+        if (element) {
+            element.value = value;
+        }
+    });
+});
+
+function saveApiSettings() {
+    const settings = {
+        defaultProvider: document.getElementById('default-provider').value,
+        defaultModel: document.getElementById('default-model').value,
+        maxRetries: parseInt(document.getElementById('max-retries').value),
+        retryDelay: parseFloat(document.getElementById('retry-delay').value),
+        enableCaching: document.getElementById('enable-caching').value === 'true',
+        cacheTtl: parseInt(document.getElementById('cache-ttl').value),
+        enableEmbeddingCache: document.getElementById('enable-embedding-cache').value === 'true',
+        enableImageCache: document.getElementById('enable-image-cache').value === 'true',
+        enableHealthMonitoring: document.getElementById('enable-health-monitoring').value === 'true',
+        healthCheckInterval: parseInt(document.getElementById('health-check-interval').value),
+        enableAutoFallback: document.getElementById('enable-auto-fallback').value === 'true',
+        fallbackThreshold: parseInt(document.getElementById('fallback-threshold').value),
+    };
+    
+    localStorage.setItem('free-llm-settings', JSON.stringify(settings));
+    showNotification('Settings saved successfully!', 'success');
+}
+
+function clearCache() {
+    if (confirm('Are you sure you want to clear all cached data?')) {
+        localStorage.removeItem('free-llm-cache');
+        showNotification('Cache cleared successfully!', 'success');
+    }
+}
+
+function updateTheme(theme) {
+    if (theme === 'system') {
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', systemTheme);
+    } else {
+        document.documentElement.setAttribute('data-theme', theme);
+    }
+    localStorage.setItem('theme', theme);
+}
+
+function resetAllSettings() {
+    if (confirm('Are you sure you want to reset all settings to defaults?')) {
+        localStorage.removeItem('free-llm-settings');
+        location.reload();
+    }
+}
+
+function clearAllData() {
+    if (confirm('Are you sure you want to clear all data? This will remove:\n- All cached responses\n- All settings\n- Chat history\n\nThis action cannot be undone!')) {
+        localStorage.clear();
+        showNotification('All data cleared. Reloading...', 'warning');
+        setTimeout(() => location.reload(), 1000);
+    }
+}
+
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 12px 24px;
+        background: var(--color-bg-elevated);
+        border: 1px solid ${type === 'success' ? 'var(--color-accent-success)' : type === 'error' ? 'var(--color-accent-error)' : 'var(--color-border-medium)'};
+        border-radius: var(--radius-lg);
+        color: var(--color-text-primary);
+        z-index: 1000;
+        animation: slideUp 0.3s ease;
+    `;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 3000);
+}
+</script>
+{% endblock %}

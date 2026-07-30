@@ -133,14 +133,34 @@ free-llm-api/
 │
 ├── requirements.txt                # Python dependencies
 ├── setup.py                        # Package setup
+├── Makefile                        # Build automation (30+ targets)
 ├── LICENSE                         # MIT License
 └── README.md                       # This file
 ```
 
 ## 🚀 Installation
 
+### Option 1: Using pip (Recommended)
 ```bash
+# Install production dependencies
 pip install -r requirements.txt
+
+# Or install the package in development mode
+pip install -e .
+```
+
+### Option 2: Using Make (if available)
+```bash
+# Install production dependencies
+make install
+
+# Install in development mode with all dev dependencies
+make dev-install
+
+# Create virtual environment first
+make venv
+source venv/bin/activate
+make dev-install
 ```
 
 ## 🔧 Configuration
@@ -148,6 +168,11 @@ pip install -r requirements.txt
 1. Copy the template configuration:
 ```bash
 cp config/api_keys_template.py config/api_keys.py
+```
+
+Or using Make:
+```bash
+make setup-config
 ```
 
 2. Edit `config/api_keys.py` with your API keys for various providers.
@@ -226,10 +251,42 @@ This collection is based on comprehensive research conducted in June 2026, consu
 
 ### Installation
 ```bash
+# Using pip
 pip install -e .
+
+# Or using Make
+make dev-install
 ```
 
-### Quick Start
+### Quick Start with Make
+```bash
+# Show all available make commands
+make help
+
+# Run the CLI tool
+make cli
+
+# Start interactive mode
+make interactive
+
+# Check provider health
+make health
+
+# Run benchmarks
+make benchmark
+
+# Show configuration
+make config
+
+# Show statistics
+make stats
+
+# List providers and models
+make list-providers
+make list-models
+```
+
+### Quick Start (Direct CLI)
 ```bash
 # Interactive mode
 free-llm --interactive
@@ -381,6 +438,100 @@ Examples:
   free-llm> exit
 ```
 
+## 🛠️ Makefile Automation
+
+This project includes a comprehensive `Makefile` with **30+ targets** for common development and operational tasks. The Makefile provides a unified interface for installation, testing, building, running the server/CLI, utilities, and version management.
+
+### Quick Reference Table
+
+| Category | Command | Description |
+|----------|---------|-------------|
+| **Help** | `make help` | Display all available commands |
+| **Install** | `make install` | Install production dependencies |
+| | `make dev-install` | Development mode with all dependencies |
+| | `make requirements` | Install/upgrade all requirements |
+| | `make venv` | Create virtual environment |
+| **Test** | `make test` | Run tests with pytest |
+| | `make test-cov` | Run tests with coverage report |
+| | `make lint` | Run linters (mypy, ruff) |
+| | `make format` | Format code with black and isort |
+| | `make check` | Run all checks (lint + test) |
+| **Build** | `make build` | Build package for distribution |
+| | `make clean` | Clean build artifacts and cache |
+| | `make publish` | Publish to PyPI |
+| | `make publish-test` | Publish to TestPyPI |
+| **Server** | `make server` | Start FastAPI web server on port 8000 |
+| | `make server-reload` | Start server with auto-reload |
+| **CLI** | `make cli` | Run CLI tool (show help) |
+| | `make interactive` | Start interactive CLI mode |
+| **Health** | `make health` | Check health of all providers |
+| **Benchmark** | `make benchmark` | Run benchmarks on default provider |
+| | `make benchmark-all` | Benchmark all providers comprehensively |
+| **Config** | `make config` | Show current configuration |
+| | `make setup-config` | Setup configuration from template |
+| **Stats** | `make stats` | Show API usage statistics |
+| **List** | `make list-providers` | List all available providers |
+| | `make list-models` | List all available models |
+| **CI/CD** | `make ci` | Run full CI pipeline (install, lint, test) |
+| **Version** | `make version` | Show current version |
+| | `make bump-patch` | Bump patch version (x.y.z → x.y.z+1) |
+| | `make bump-minor` | Bump minor version (x.y.z → x.y+1.0) |
+| | `make bump-major` | Bump major version (x.y.z → x+1.0.0) |
+
+### Complete Command List
+
+```bash
+# Show all available commands
+make help
+
+# Install dependencies
+make install              # Production dependencies
+make dev-install          # Development mode with all dependencies
+make requirements         # Install/upgrade all requirements
+
+# Testing and quality
+make test                 # Run tests
+make test-cov             # Run tests with coverage report
+make lint                 # Run linters (mypy, ruff)
+make format               # Format code with black and isort
+make check                # Run all checks (lint + test)
+
+# Build and distribution
+make build                # Build package for distribution
+make clean                # Clean build artifacts
+make publish              # Publish to PyPI
+make publish-test         # Publish to TestPyPI
+
+# Server and CLI
+make server               # Start FastAPI web server
+make server-reload        # Start server with auto-reload
+make cli                  # Run CLI tool
+make interactive          # Start interactive CLI mode
+
+# Utility commands
+make health               # Check provider health
+make benchmark            # Run benchmarks
+make benchmark-all        # Benchmark all providers
+make config               # Show configuration
+make stats                # Show API statistics
+make list-providers       # List all providers
+make list-models          # List all models
+
+# Development helpers
+make setup-config         # Setup configuration from template
+make venv                 # Create virtual environment
+make activate             # Print activation command
+
+# CI/CD
+make ci                   # Run full CI pipeline
+
+# Version management
+make version              # Show current version
+make bump-patch           # Bump patch version
+make bump-minor           # Bump minor version
+make bump-major           # Bump major version
+```
+
 ## 🚀 Advanced Features
 
 ### Overview
@@ -438,6 +589,8 @@ free-llm-api/
 │   ├── __init__.py
 │   ├── app.py                      # FastAPI application
 │   └── routes.py                   # API route definitions
+│   
+├── Makefile                        # Build automation (NEW!)
 │   
 └── providers/                      # Existing provider implementations
 ```
@@ -1656,8 +1809,14 @@ free-llm --help                 # Show help
 # Install with all dependencies
 pip install -e ".[all]"
 
+# Or using Make
+make dev-install
+
 # Start development server
 uvicorn free_llm_api.web.app:app --reload
+
+# Or using Make
+make server
 
 # Start production server
 uvicorn free_llm_api.web.app:app --host 0.0.0.0 --port 8000 --workers 4
@@ -1727,6 +1886,11 @@ docker-compose up -d
 
 # View logs
 docker-compose logs -f
+
+# Using Make (if Docker Makefile targets are added)
+# make docker-build
+# make docker-run
+# make docker-logs
 ```
 
 ### Kubernetes Commands
@@ -1745,6 +1909,9 @@ kubectl scale deployment free-llm-api --replicas=5
 
 # View logs
 kubectl logs -f deployment/free-llm-api
+
+# Note: Makefile targets for Kubernetes can be added as needed
+# Example: make k8s-deploy, make k8s-scale, make k8s-logs
 ```
 
 ## 📝 Contributing

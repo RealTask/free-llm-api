@@ -36,7 +36,7 @@ This repository provides a comprehensive catalog of free-tier and completely fre
 ## 📁 Project Structure
 
 ```
-free-llm-api/
+llmapi-api/
 ├── free_llm_api/                    # Main package
 │   ├── __init__.py                 # Exports all public APIs
 │   └── api.py                      # Main FreeLLMAPI class
@@ -289,125 +289,125 @@ make list-models
 ### Quick Start (Direct CLI)
 ```bash
 # Interactive mode
-free-llm --interactive
-free-llm -i
+llmapi --interactive
+llmapi -i
 
 # Simple chat
-free-llm chat "What is AI?"
+llmapi chat "What is AI?"
 ```
 
 ### Chat Commands
 ```bash
 # Basic chat
-free-llm chat "Your prompt here"
+llmapi chat "Your prompt here"
 
 # With specific provider and model
-free-llm chat "Tell me a story" --provider groq --model llama-3.1-8b-instant
+llmapi chat "Tell me a story" --provider groq --model llama-3.1-8b-instant
 
 # Stream responses
-free-llm chat "Explain quantum computing" --stream
+llmapi chat "Explain quantum computing" --stream
 
 # With temperature
-free-llm chat "Write a poem" --temperature 0.9
+llmapi chat "Write a poem" --temperature 0.9
 
 # With max tokens
-free-llm chat "Summarize this article" --max-tokens 500
+llmapi chat "Summarize this article" --max-tokens 500
 ```
 
 ### Provider & Model Commands
 ```bash
 # List all providers
-free-llm list
+llmapi list
 
 # List all models
-free-llm list models
+llmapi list models
 
 # List models for a specific provider
-free-llm list models groq
-free-llm list models openrouter
+llmapi list models groq
+llmapi list models openrouter
 
 # Get provider information
-free-llm info groq
+llmapi info groq
 
 # Get model information
-free-llm info groq llama-3.1-8b-instant
+llmapi info groq llama-3.1-8b-instant
 ```
 
 ### Health & Status Commands
 ```bash
 # Check all providers health
-free-llm health
+llmapi health
 
 # Check specific provider health
-free-llm health groq
-free-llm health openrouter
+llmapi health groq
+llmapi health openrouter
 ```
 
 ### Benchmarking Commands
 ```bash
 # Run benchmark on default provider
-free-llm benchmark
+llmapi benchmark
 
 # Benchmark specific provider
-free-llm benchmark --provider groq
+llmapi benchmark --provider groq
 
 # Benchmark with specific type
-free-llm benchmark --provider groq --type latency
-free-llm benchmark --provider groq --type throughput
-free-llm benchmark --provider groq --type comprehensive
+llmapi benchmark --provider groq --type latency
+llmapi benchmark --provider groq --type throughput
+llmapi benchmark --provider groq --type comprehensive
 
 # Benchmark specific model
-free-llm benchmark --provider groq --model llama-3.1-8b-instant --type comprehensive
+llmapi benchmark --provider groq --model llama-3.1-8b-instant --type comprehensive
 ```
 
 ### Configuration Commands
 ```bash
 # Show current configuration
-free-llm config
+llmapi config
 
 # Set default provider
-free-llm config set default_provider groq
+llmapi config set default_provider groq
 
 # Set default model
-free-llm config set default_model llama-3.1-8b-instant
+llmapi config set default_model llama-3.1-8b-instant
 
 # Enable/disable caching
-free-llm config set enable_caching true
-free-llm config set enable_caching false
+llmapi config set enable_caching true
+llmapi config set enable_caching false
 
 # Enable/disable health monitoring
-free-llm config set enable_health_monitoring true
+llmapi config set enable_health_monitoring true
 
 # Set maximum retries
-free-llm config set max_retries 3
+llmapi config set max_retries 3
 
 # Set retry delay
-free-llm config set retry_delay 2.0
+llmapi config set retry_delay 2.0
 ```
 
 ### Statistics Commands
 ```bash
 # Show API statistics
-free-llm stats
+llmapi stats
 
 # Show detailed statistics
-free-llm stats --detailed
+llmapi stats --detailed
 ```
 
 ### Utility Commands
 ```bash
 # Check version
-free-llm --version
-free-llm -v
+llmapi --version
+llmapi -v
 
 # Show help
-free-llm --help
-free-llm -h
+llmapi --help
+llmapi -h
 ```
 
 ### Interactive Mode Commands
 ```
-$ free-llm --interactive
+$ llmapi --interactive
 
 Free LLM API - Interactive Mode
 ============================================================
@@ -430,12 +430,12 @@ Available commands:
   quit                   - Exit interactive mode
 
 Examples:
-  free-llm> chat "What is machine learning?"
-  free-llm> chat "Write a story" --provider groq --stream
-  free-llm> list
-  free-llm> info groq
-  free-llm> health
-  free-llm> exit
+  llmapi> chat "What is machine learning?"
+  llmapi> chat "Write a story" --provider groq --stream
+  llmapi> list
+  llmapi> info groq
+  llmapi> health
+  llmapi> exit
 ```
 
 ## 🛠️ Makefile Automation
@@ -552,7 +552,7 @@ The Free LLM API has been significantly enhanced with production-ready features 
 ## 📁 New Package Structure
 
 ```
-free-llm-api/
+llmapi-api/
 ├── free_llm_api/                    # Main package
 │   ├── __init__.py                 # Exports all public APIs
 │   ├── api.py                      # Main FreeLLMAPI class
@@ -1015,52 +1015,52 @@ pip install -e .
 
 ```bash
 # Interactive mode
-free-llm --interactive
-free-llm -i
+llmapi --interactive
+llmapi -i
 
 # Chat
-free-llm chat "What is AI?"
-free-llm chat "Tell me a story" --provider groq --model llama-3.1-8b-instant
-free-llm chat "Explain quantum computing" --stream
+llmapi chat "What is AI?"
+llmapi chat "Tell me a story" --provider groq --model llama-3.1-8b-instant
+llmapi chat "Explain quantum computing" --stream
 
 # List providers and models
-free-llm list
-free-llm list models
-free-llm list models groq
+llmapi list
+llmapi list models
+llmapi list models groq
 
 # Get information
-free-llm info groq
-free-llm info groq llama-3.1-8b-instant
+llmapi info groq
+llmapi info groq llama-3.1-8b-instant
 
 # Health checks
-free-llm health
-free-llm health groq
+llmapi health
+llmapi health groq
 
 # Benchmarking
-free-llm benchmark
-free-llm benchmark --provider groq --type latency
-free-llm benchmark --provider groq --model llama-3.1-8b-instant --type comprehensive
+llmapi benchmark
+llmapi benchmark --provider groq --type latency
+llmapi benchmark --provider groq --model llama-3.1-8b-instant --type comprehensive
 
 # Configuration
-free-llm config
-free-llm config set default_provider groq
-free-llm config set enable_caching false
+llmapi config
+llmapi config set default_provider groq
+llmapi config set enable_caching false
 
 # Statistics
-free-llm stats
+llmapi stats
 ```
 
 ### Interactive Mode
 
 ```
-$ free-llm --interactive
+$ llmapi --interactive
 
 Free LLM API - Interactive Mode
 ============================================================
 
 Type 'help' for available commands, 'exit' to quit
 
-free-llm> chat "What is AI?"
+llmapi> chat "What is AI?"
 
 ==================================================
 Response from groq/llama-3.1-8b-instant
@@ -1071,7 +1071,7 @@ AI stands for Artificial Intelligence, which is the field...
 
 ==================================================
 
-free-llm> list
+llmapi> list
 
 ==================================================
 Available Providers
@@ -1085,7 +1085,7 @@ mistral              [available   ] - 5 models
 Total: 15 providers
 ==================================================
 
-free-llm> exit
+llmapi> exit
 Goodbye!
 ```
 
@@ -1104,7 +1104,7 @@ pip install -e ".[all]"
 uvicorn free_llm_api.web.app:app --reload
 
 # Using the entry point
-free-llm-server
+llmapi-server
 ```
 
 ### API Endpoints
@@ -1501,19 +1501,19 @@ asyncio.run(main())
 pip install -e .
 
 # Chat
-free-llm chat "What is AI?"
+llmapi chat "What is AI?"
 
 # List providers
-free-llm list
+llmapi list
 
 # Get provider info
-free-llm info groq
+llmapi info groq
 
 # Run benchmark
-free-llm benchmark --provider groq --type latency
+llmapi benchmark --provider groq --type latency
 
 # Interactive mode
-free-llm --interactive
+llmapi --interactive
 ```
 
 ### Example 6: FastAPI Server
@@ -1575,7 +1575,7 @@ WORKDIR /app
 COPY . .
 RUN pip install -e ".[all]"
 
-CMD ["free-llm-server"]
+CMD ["llmapi-server"]
 ```
 
 ### Kubernetes
@@ -1584,19 +1584,19 @@ CMD ["free-llm-server"]
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: free-llm-api
+  name: llmapi-api
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: free-llm-api
+      app: llmapi-api
   template:
     metadata:
       labels:
-        app: free-llm-api
+        app: llmapi-api
     spec:
       containers:
-      - name: free-llm-api
+      - name: llmapi-api
         image: your-image:latest
         ports:
         - containerPort: 8000
@@ -1615,10 +1615,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: free-llm-api
+  name: llmapi-api
 spec:
   selector:
-    app: free-llm-api
+    app: llmapi-api
   ports:
   - port: 80
     targetPort: 8000
@@ -1685,7 +1685,7 @@ pip install -e ".[all]"
 uvicorn free_llm_api.web.app:app --reload --host 0.0.0.0 --port 8000
 
 # Or use the CLI entry point
-free-llm-server
+llmapi-server
 ```
 
 ### Access the Dashboard
@@ -1755,52 +1755,52 @@ Once the server is running, open your browser and navigate to:
 pip install -e .
 
 # Interactive mode
-free-llm --interactive
-free-llm -i
+llmapi --interactive
+llmapi -i
 
 # Chat commands
-free-llm chat "Your prompt here"
-free-llm chat "Tell me a story" --provider groq --model llama-3.1-8b-instant
-free-llm chat "Explain quantum computing" --stream
-free-llm chat "Write a poem" --temperature 0.9
-free-llm chat "Summarize this article" --max-tokens 500
+llmapi chat "Your prompt here"
+llmapi chat "Tell me a story" --provider groq --model llama-3.1-8b-instant
+llmapi chat "Explain quantum computing" --stream
+llmapi chat "Write a poem" --temperature 0.9
+llmapi chat "Summarize this article" --max-tokens 500
 
 # List commands
-free-llm list                      # List all providers
-free-llm list models               # List all models
-free-llm list models groq          # List models for specific provider
+llmapi list                      # List all providers
+llmapi list models               # List all models
+llmapi list models groq          # List models for specific provider
 
 # Info commands
-free-llm info groq                 # Provider information
-free-llm info groq llama-3.1-8b-instant  # Model information
+llmapi info groq                 # Provider information
+llmapi info groq llama-3.1-8b-instant  # Model information
 
 # Health commands
-free-llm health                    # Check all providers
-free-llm health groq               # Check specific provider
+llmapi health                    # Check all providers
+llmapi health groq               # Check specific provider
 
 # Benchmark commands
-free-llm benchmark                                    # Default benchmark
-free-llm benchmark --provider groq                    # Specific provider
-free-llm benchmark --provider groq --type latency     # Latency test
-free-llm benchmark --provider groq --type throughput  # Throughput test
-free-llm benchmark --provider groq --type comprehensive  # Full suite
+llmapi benchmark                                    # Default benchmark
+llmapi benchmark --provider groq                    # Specific provider
+llmapi benchmark --provider groq --type latency     # Latency test
+llmapi benchmark --provider groq --type throughput  # Throughput test
+llmapi benchmark --provider groq --type comprehensive  # Full suite
 
 # Configuration commands
-free-llm config                              # Show configuration
-free-llm config set default_provider groq    # Set default provider
-free-llm config set default_model llama-3.1-8b-instant  # Set default model
-free-llm config set enable_caching true      # Enable caching
-free-llm config set enable_health_monitoring true  # Enable health checks
-free-llm config set max_retries 3            # Set retry count
-free-llm config set retry_delay 2.0          # Set retry delay
+llmapi config                              # Show configuration
+llmapi config set default_provider groq    # Set default provider
+llmapi config set default_model llama-3.1-8b-instant  # Set default model
+llmapi config set enable_caching true      # Enable caching
+llmapi config set enable_health_monitoring true  # Enable health checks
+llmapi config set max_retries 3            # Set retry count
+llmapi config set retry_delay 2.0          # Set retry delay
 
 # Statistics commands
-free-llm stats                  # Show API statistics
-free-llm stats --detailed       # Detailed statistics
+llmapi stats                  # Show API statistics
+llmapi stats --detailed       # Detailed statistics
 
 # Utility commands
-free-llm --version              # Check version
-free-llm --help                 # Show help
+llmapi --version              # Check version
+llmapi --help                 # Show help
 ```
 
 ### Web Server Commands
@@ -1822,10 +1822,10 @@ make server
 uvicorn free_llm_api.web.app:app --host 0.0.0.0 --port 8000 --workers 4
 
 # Using CLI entry point
-free-llm-server
+llmapi-server
 
 # With custom host/port
-free-llm-server --host 0.0.0.0 --port 8080
+llmapi-server --host 0.0.0.0 --port 8080
 ```
 
 ### API Endpoints
@@ -1873,13 +1873,13 @@ curl -X POST http://localhost:8000/api/v1/image/ \
 
 ```bash
 # Build Docker image
-docker build -t free-llm-api .
+docker build -t llmapi-api .
 
 # Run container
 docker run -p 8000:8000 \
   -e GROQ_API_KEY=your_key \
   -e OPENROUTER_API_KEY=your_key \
-  free-llm-api
+  llmapi-api
 
 # Docker Compose
 docker-compose up -d
@@ -1905,10 +1905,10 @@ kubectl get pods
 kubectl get services
 
 # Scale deployment
-kubectl scale deployment free-llm-api --replicas=5
+kubectl scale deployment llmapi-api --replicas=5
 
 # View logs
-kubectl logs -f deployment/free-llm-api
+kubectl logs -f deployment/llmapi-api
 
 # Note: Makefile targets for Kubernetes can be added as needed
 # Example: make k8s-deploy, make k8s-scale, make k8s-logs

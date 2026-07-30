@@ -89,53 +89,53 @@ docs: ## Generate documentation (placeholder for future docs)
 # Server & CLI
 server: ## Start the FastAPI web server
 	@echo "Starting FastAPI web server..."
-	free-llm-server --host 0.0.0.0 --port 8000
+	llmapi-server --host 0.0.0.0 --port 8000
 
 server-reload: ## Start the FastAPI web server with auto-reload
 	@echo "Starting FastAPI web server with auto-reload..."
-	free-llm-server --host 0.0.0.0 --port 8000 --reload
+	llmapi-server --host 0.0.0.0 --port 8000 --reload
 
 cli: ## Run the CLI tool
 	@echo "Free LLM API CLI"
-	@echo "Usage: free-llm [command] [options]"
+	@echo "Usage: llmapi [command] [options]"
 	@echo ""
-	free-llm --help
+	llmapi --help
 
 interactive: ## Start interactive CLI mode
 	@echo "Starting interactive CLI mode..."
-	free-llm --interactive
+	llmapi --interactive
 
 # Utility Commands
 health: ## Check health of all providers
 	@echo "Checking provider health..."
-	free-llm health
+	llmapi health
 
 benchmark: ## Run benchmarks on default provider
 	@echo "Running benchmarks..."
-	free-llm benchmark
+	llmapi benchmark
 
 benchmark-all: ## Run comprehensive benchmarks on all providers
 	@echo "Running comprehensive benchmarks on all providers..."
 	@for provider in groq google_ai_studio openrouter mistral; do \
 		echo "Benchmarking $$provider..."; \
-		free-llm benchmark --provider $$provider --type comprehensive || true; \
+		llmapi benchmark --provider $$provider --type comprehensive || true; \
 	done
 
 config: ## Show current configuration
 	@echo "Current configuration:"
-	free-llm config
+	llmapi config
 
 stats: ## Show API usage statistics
 	@echo "API usage statistics:"
-	free-llm stats
+	llmapi stats
 
 list-providers: ## List all available providers
 	@echo "Available providers:"
-	free-llm list
+	llmapi list
 
 list-models: ## List all available models
 	@echo "Available models:"
-	free-llm list models
+	llmapi list models
 
 # Development Helpers
 setup-config: ## Setup configuration from template

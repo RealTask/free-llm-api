@@ -1,56 +1,55 @@
 ```
-# Environment variables
-.env
-.env.local
-.env.*
-
-# Python specific
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .Python
-*.so
-*.egg-info/
-dist/
-build/
-*.egg
-
-# Virtual environments
+env/
 venv/
 .venv/
-env/
 .ENV
+.python-version
+.pytest_cache/
+.mypy_cache/
+.coverage
+coverage/
 
-# IDE and editor files
+# Build artifacts
+build/
+dist/
+*.egg
+*.egg-info/
+*.so
+*.dylib
+*.dll
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+.env.*
+!.env.example
+
+# Editors
 .vscode/
 .idea/
 *.swp
 *.swo
 *.tmp
 
-# System files
+# OS
 .DS_Store
 Thumbs.db
 
-# Logs
-*.log
-
-# Coverage reports
-.coverage
-coverage/
-htmlcov/
-
-# Testing
-.pytest_cache/
-.mypy_cache/
-
-# Distribution / packaging
+# Compressed
+*.zip
 *.tar.gz
-*.whl
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Documentation
-docs/_build/
+*.tar.bz2
+*.tar.xz
+*.gz
+*.rar
+*.7z
 ```

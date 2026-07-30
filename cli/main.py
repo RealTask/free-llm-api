@@ -124,7 +124,7 @@ class CLIApp:
             try:
                 # Get input
                 try:
-                    user_input = input("free-llm> ").strip()
+                    user_input = input("llmapi> ").strip()
                 except (EOFError, KeyboardInterrupt):
                     print("\nGoodbye!")
                     break
@@ -179,8 +179,8 @@ class CLIApp:
         print("Free LLM API - Command Line Interface")
         print("=" * 60)
         print("\nUsage:")
-        print("  free-llm [command] [options]")
-        print("  free-llm --interactive  # Start interactive mode")
+        print("  llmapi [command] [options]")
+        print("  llmapi --interactive  # Start interactive mode")
         print("\nCommands:")
         
         for name, cmd in self.commands.items():
@@ -191,10 +191,10 @@ class CLIApp:
         print("  --interactive, -i   Start interactive mode")
         print("  --help, -h         Show this help message")
         print("\nExamples:")
-        print('  free-llm chat "What is AI?"')
-        print("  free-llm list")
-        print("  free-llm info groq")
-        print("  free-llm --interactive")
+        print('  llmapi chat "What is AI?"')
+        print("  llmapi list")
+        print("  llmapi info groq")
+        print("  llmapi --interactive")
         print("=" * 60)
 
 

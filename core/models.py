@@ -14,6 +14,7 @@ import json
 
 class ProviderStatus(Enum):
     """Status of a provider."""
+    UNKNOWN = "unknown"
     AVAILABLE = "available"
     DEGRADED = "degraded"
     UNAVAILABLE = "unavailable"

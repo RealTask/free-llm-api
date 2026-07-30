@@ -732,6 +732,727 @@ Examples:
         return "stats"
 
 
+class InstallCommand(BaseCommand):
+    """Command for installing production dependencies."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute install command."""
+        print("\n" + "=" * 50)
+        print("Installing production dependencies...")
+        print("=" * 50 + "\n")
+        
+        import subprocess
+        result = subprocess.run(["pip", "install", "-r", "requirements.txt"])
+        
+        if result.returncode == 0:
+            print("\nInstallation complete!")
+            return CommandResult(success=True, message="Installation complete")
+        else:
+            print("\nInstallation failed!")
+            return CommandResult(success=False, message="Installation failed", error=f"Exit code: {result.returncode}")
+
+    def get_help(self) -> str:
+        return """\nInstall production dependencies\n\nUsage:\n  install\n\nExamples:\n  install\n"""
+
+    def get_usage(self) -> str:
+        return "install"
+
+
+class DevInstallCommand(BaseCommand):
+    """Command for installing in development mode."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute dev-install command."""
+        print("\n" + "=" * 50)
+        print("Installing in development mode with all dependencies...")
+        print("=" * 50 + "\n")
+        
+        import subprocess
+        result = subprocess.run(["pip", "install", "-e", ".[dev,all]"])
+        
+        if result.returncode == 0:
+            print("\nDevelopment installation complete!")
+            return CommandResult(success=True, message="Development installation complete")
+        else:
+            print("\nDevelopment installation failed!")
+            return CommandResult(success=False, message="Development installation failed", error=f"Exit code: {result.returncode}")
+
+    def get_help(self) -> str:
+        return """\nInstall in development mode with all dependencies\n\nUsage:\n  dev-install\n\nExamples:\n  dev-install\n"""
+
+    def get_usage(self) -> str:
+        return "dev-install"
+
+
+class RequirementsCommand(BaseCommand):
+    """Command for installing/upgrading all requirements."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute requirements command."""
+        print("\n" + "=" * 50)
+        print("Installing/upgrading requirements...")
+        print("=" * 50 + "\n")
+        
+        import subprocess
+        subprocess.run(["pip", "install", "--upgrade", "-r", "requirements.txt"])
+        subprocess.run(["pip", "install", "--upgrade", "-e", ".[dev,all]"])
+        
+        print("\nRequirements upgrade complete!")
+        return CommandResult(success=True, message="Requirements upgrade complete")
+
+    def get_help(self) -> str:
+        return """\nInstall/upgrade all requirements\n\nUsage:\n  requirements\n\nExamples:\n  requirements\n"""
+
+    def get_usage(self) -> str:
+        return "requirements"
+
+
+class TestCommand(BaseCommand):
+    """Command for running tests."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute test command."""
+        print("\n" + "=" * 50)
+        print("Running tests...")
+        print("=" * 50 + "\n")
+        
+        import subprocess
+        result = subprocess.run(["pytest", "tests/", "-v"])
+        
+        if result.returncode == 0:
+            print("\nAll tests passed!")
+            return CommandResult(success=True, message="All tests passed")
+        else:
+            print("\nSome tests failed!")
+            return CommandResult(success=False, message="Some tests failed", error=f"Exit code: {result.returncode}")
+
+    def get_help(self) -> str:
+        return """\nRun tests with pytest\n\nUsage:\n  test\n\nExamples:\n  test\n"""
+
+    def get_usage(self) -> str:
+        return "test"
+
+
+class TestCovCommand(BaseCommand):
+    """Command for running tests with coverage."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute test-cov command."""
+        print("\n" + "=" * 50)
+        print("Running tests with coverage...")
+        print("=" * 50 + "\n")
+        
+        import subprocess
+        result = subprocess.run(["pytest", "tests/", "-v", "--cov=.", "--cov-report=html", "--cov-report=term-missing"])
+        
+        if result.returncode == 0:
+            print("\nTests with coverage complete!")
+            return CommandResult(success=True, message="Tests with coverage complete")
+        else:
+            print("\nTests failed!")
+            return CommandResult(success=False, message="Tests failed", error=f"Exit code: {result.returncode}")
+
+    def get_help(self) -> str:
+        return """\nRun tests with coverage report\n\nUsage:\n  test-cov\n\nExamples:\n  test-cov\n"""
+
+    def get_usage(self) -> str:
+        return "test-cov"
+
+
+class LintCommand(BaseCommand):
+    """Command for running linters."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute lint command."""
+        print("\n" + "=" * 50)
+        print("Running linters...")
+        print("=" * 50 + "\n")
+        
+        import subprocess
+        subprocess.run(["mypy", ".", "--ignore-missing-imports"])
+        result = subprocess.run(["ruff", "check", "."])
+        
+        if result.returncode == 0:
+            print("\nLinting complete!")
+            return CommandResult(success=True, message="Linting complete")
+        else:
+            print("\nLinting found issues!")
+            return CommandResult(success=False, message="Linting found issues")
+
+    def get_help(self) -> str:
+        return """\nRun linters (mypy, ruff)\n\nUsage:\n  lint\n\nExamples:\n  lint\n"""
+
+    def get_usage(self) -> str:
+        return "lint"
+
+
+class FormatCommand(BaseCommand):
+    """Command for formatting code."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute format command."""
+        print("\n" + "=" * 50)
+        print("Formatting code...")
+        print("=" * 50 + "\n")
+        
+        import subprocess
+        subprocess.run(["black", "."])
+        subprocess.run(["isort", "."])
+        
+        print("\nFormatting complete!")
+        return CommandResult(success=True, message="Formatting complete")
+
+    def get_help(self) -> str:
+        return """\nFormat code with black and isort\n\nUsage:\n  format\n\nExamples:\n  format\n"""
+
+    def get_usage(self) -> str:
+        return "format"
+
+
+class CheckCommand(BaseCommand):
+    """Command for running all checks."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute check command."""
+        print("\n" + "=" * 50)
+        print("Running all checks (lint + test)...")
+        print("=" * 50 + "\n")
+        
+        lint_cmd = LintCommand(self.api)
+        await lint_cmd.execute([])
+        
+        test_cmd = TestCommand(self.api)
+        await test_cmd.execute([])
+        
+        print("\nAll checks complete!")
+        return CommandResult(success=True, message="All checks complete")
+
+    def get_help(self) -> str:
+        return """\nRun all checks (lint + test)\n\nUsage:\n  check\n\nExamples:\n  check\n"""
+
+    def get_usage(self) -> str:
+        return "check"
+
+
+class CleanCommand(BaseCommand):
+    """Command for cleaning build artifacts."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute clean command."""
+        print("\n" + "=" * 50)
+        print("Cleaning build artifacts...")
+        print("=" * 50 + "\n")
+        
+        import os
+        import shutil
+        
+        dirs_to_remove = ["build", "dist", ".pytest_cache", ".mypy_cache", ".ruff_cache", "htmlcov"]
+        for d in dirs_to_remove:
+            if os.path.exists(d):
+                shutil.rmtree(d)
+                print(f"Removed: {d}")
+        
+        # Remove egg-info directories
+        for item in os.listdir("."):
+            if item.endswith(".egg-info"):
+                shutil.rmtree(item)
+                print(f"Removed: {item}")
+        
+        # Remove __pycache__ and .pyc files
+        for root, dirs, files in os.walk("."):
+            if "__pycache__" in dirs:
+                shutil.rmtree(os.path.join(root, "__pycache__"))
+            for f in files:
+                if f.endswith(".pyc") or f.endswith(".pyo"):
+                    os.remove(os.path.join(root, f))
+        
+        print("\nClean complete!")
+        return CommandResult(success=True, message="Clean complete")
+
+    def get_help(self) -> str:
+        return """\nClean build artifacts and cache\n\nUsage:\n  clean\n\nExamples:\n  clean\n"""
+
+    def get_usage(self) -> str:
+        return "clean"
+
+
+class BuildCommand(BaseCommand):
+    """Command for building the package."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute build command."""
+        print("\n" + "=" * 50)
+        print("Building package...")
+        print("=" * 50 + "\n")
+        
+        clean_cmd = CleanCommand(self.api)
+        await clean_cmd.execute([])
+        
+        import subprocess
+        result = subprocess.run(["python", "setup.py", "sdist", "bdist_wheel"])
+        
+        if result.returncode == 0:
+            print("\nBuild complete! Check dist/ directory")
+            return CommandResult(success=True, message="Build complete")
+        else:
+            print("\nBuild failed!")
+            return CommandResult(success=False, message="Build failed", error=f"Exit code: {result.returncode}")
+
+    def get_help(self) -> str:
+        return """\nBuild package for distribution\n\nUsage:\n  build\n\nExamples:\n  build\n"""
+
+    def get_usage(self) -> str:
+        return "build"
+
+
+class PublishCommand(BaseCommand):
+    """Command for publishing to PyPI."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute publish command."""
+        print("\n" + "=" * 50)
+        print("Publishing package to PyPI...")
+        print("WARNING: This will publish to PyPI. Make sure you have twine installed and configured.")
+        print("=" * 50 + "\n")
+        
+        import subprocess
+        result = subprocess.run(["twine", "upload", "dist/*"])
+        
+        if result.returncode == 0:
+            print("\nPublish complete!")
+            return CommandResult(success=True, message="Publish complete")
+        else:
+            print("\nPublish failed!")
+            return CommandResult(success=False, message="Publish failed", error=f"Exit code: {result.returncode}")
+
+    def get_help(self) -> str:
+        return """\nPublish package to PyPI (requires twine)\n\nUsage:\n  publish\n\nExamples:\n  publish\n"""
+
+    def get_usage(self) -> str:
+        return "publish"
+
+
+class PublishTestCommand(BaseCommand):
+    """Command for publishing to TestPyPI."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute publish-test command."""
+        print("\n" + "=" * 50)
+        print("Publishing package to TestPyPI...")
+        print("=" * 50 + "\n")
+        
+        import subprocess
+        result = subprocess.run(["twine", "upload", "--repository", "testpypi", "dist/*"])
+        
+        if result.returncode == 0:
+            print("\nPublish to TestPyPI complete!")
+            return CommandResult(success=True, message="Publish to TestPyPI complete")
+        else:
+            print("\nPublish to TestPyPI failed!")
+            return CommandResult(success=False, message="Publish to TestPyPI failed", error=f"Exit code: {result.returncode}")
+
+    def get_help(self) -> str:
+        return """\nPublish package to TestPyPI\n\nUsage:\n  publish-test\n\nExamples:\n  publish-test\n"""
+
+    def get_usage(self) -> str:
+        return "publish-test"
+
+
+class DocsCommand(BaseCommand):
+    """Command for generating documentation."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute docs command."""
+        print("\n" + "=" * 50)
+        print("Documentation generation placeholder")
+        print("Future: Generate Sphinx or MkDocs documentation")
+        print("=" * 50)
+        return CommandResult(success=True, message="Documentation placeholder")
+
+    def get_help(self) -> str:
+        return """\nGenerate documentation (placeholder for future docs)\n\nUsage:\n  docs\n\nExamples:\n  docs\n"""
+
+    def get_usage(self) -> str:
+        return "docs"
+
+
+class ServerCommand(BaseCommand):
+    """Command for starting the FastAPI web server."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute server command."""
+        print("\n" + "=" * 50)
+        print("Starting FastAPI web server...")
+        print("=" * 50 + "\n")
+        
+        import subprocess
+        result = subprocess.run(["llmapi-server", "--host", "0.0.0.0", "--port", "8000"])
+        
+        return CommandResult(success=True, message="Server started")
+
+    def get_help(self) -> str:
+        return """\nStart the FastAPI web server\n\nUsage:\n  server\n\nExamples:\n  server\n"""
+
+    def get_usage(self) -> str:
+        return "server"
+
+
+class ServerReloadCommand(BaseCommand):
+    """Command for starting the FastAPI web server with auto-reload."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute server-reload command."""
+        print("\n" + "=" * 50)
+        print("Starting FastAPI web server with auto-reload...")
+        print("=" * 50 + "\n")
+        
+        import subprocess
+        result = subprocess.run(["llmapi-server", "--host", "0.0.0.0", "--port", "8000", "--reload"])
+        
+        return CommandResult(success=True, message="Server started with reload")
+
+    def get_help(self) -> str:
+        return """\nStart the FastAPI web server with auto-reload\n\nUsage:\n  server-reload\n\nExamples:\n  server-reload\n"""
+
+    def get_usage(self) -> str:
+        return "server-reload"
+
+
+class InteractiveCommand(BaseCommand):
+    """Command for starting interactive CLI mode."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute interactive command."""
+        from cli.main import CLIApp
+        
+        cli = CLIApp()
+        await cli.run_interactive()
+        
+        return CommandResult(success=True, message="Interactive mode complete")
+
+    def get_help(self) -> str:
+        return """\nStart interactive CLI mode\n\nUsage:\n  interactive\n\nExamples:\n  interactive\n"""
+
+    def get_usage(self) -> str:
+        return "interactive"
+
+
+class BenchmarkAllCommand(BaseCommand):
+    """Command for running comprehensive benchmarks on all providers."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute benchmark-all command."""
+        print("\n" + "=" * 50)
+        print("Running comprehensive benchmarks on all providers...")
+        print("=" * 50 + "\n")
+        
+        providers = ["groq", "google_ai_studio", "openrouter", "mistral"]
+        
+        for provider in providers:
+            print(f"\nBenchmarking {provider}...")
+            bench_cmd = BenchmarkCommand(self.api)
+            await bench_cmd.execute(["--provider", provider, "--type", "comprehensive"])
+        
+        print("\nBenchmark all complete!")
+        return CommandResult(success=True, message="Benchmark all complete")
+
+    def get_help(self) -> str:
+        return """\nRun comprehensive benchmarks on all providers\n\nUsage:\n  benchmark-all\n\nExamples:\n  benchmark-all\n"""
+
+    def get_usage(self) -> str:
+        return "benchmark-all"
+
+
+class SetupConfigCommand(BaseCommand):
+    """Command for setting up configuration from template."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute setup-config command."""
+        print("\n" + "=" * 50)
+        print("Setting up configuration...")
+        print("=" * 50 + "\n")
+        
+        import shutil
+        import os
+        
+        src = "config/api_keys_template.py"
+        dst = "config/api_keys.py"
+        
+        if not os.path.exists(dst):
+            shutil.copy(src, dst)
+            print("Configuration setup complete! Edit config/api_keys.py with your API keys")
+            return CommandResult(success=True, message="Configuration setup complete")
+        else:
+            print("Config already exists")
+            return CommandResult(success=True, message="Config already exists")
+
+    def get_help(self) -> str:
+        return """\nSetup configuration from template\n\nUsage:\n  setup-config\n\nExamples:\n  setup-config\n"""
+
+    def get_usage(self) -> str:
+        return "setup-config"
+
+
+class VenvCommand(BaseCommand):
+    """Command for creating virtual environment."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute venv command."""
+        print("\n" + "=" * 50)
+        print("Creating virtual environment...")
+        print("=" * 50 + "\n")
+        
+        import subprocess
+        result = subprocess.run(["python", "-m", "venv", "venv"])
+        
+        if result.returncode == 0:
+            print("\nVirtual environment created!")
+            print("Activate it with: source venv/bin/activate")
+            return CommandResult(success=True, message="Virtual environment created")
+        else:
+            print("\nVirtual environment creation failed!")
+            return CommandResult(success=False, message="Virtual environment creation failed", error=f"Exit code: {result.returncode}")
+
+    def get_help(self) -> str:
+        return """\nCreate virtual environment\n\nUsage:\n  venv\n\nExamples:\n  venv\n"""
+
+    def get_usage(self) -> str:
+        return "venv"
+
+
+class ActivateCommand(BaseCommand):
+    """Command for printing activation command."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute activate command."""
+        print("\nTo activate the virtual environment, run:")
+        print("  source venv/bin/activate")
+        return CommandResult(success=True, message="Activation command printed")
+
+    def get_help(self) -> str:
+        return """\nPrint activation command for virtual environment\n\nUsage:\n  activate\n\nExamples:\n  activate\n"""
+
+    def get_usage(self) -> str:
+        return "activate"
+
+
+class CICommand(BaseCommand):
+    """Command for running CI pipeline."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute ci command."""
+        print("\n" + "=" * 50)
+        print("Running CI pipeline...")
+        print("=" * 50 + "\n")
+        
+        dev_install = DevInstallCommand(self.api)
+        await dev_install.execute([])
+        
+        lint = LintCommand(self.api)
+        await lint.execute([])
+        
+        test_cov = TestCovCommand(self.api)
+        await test_cov.execute([])
+        
+        print("\nCI pipeline complete!")
+        return CommandResult(success=True, message="CI pipeline complete")
+
+    def get_help(self) -> str:
+        return """\nRun CI pipeline (install, lint, test)\n\nUsage:\n  ci\n\nExamples:\n  ci\n"""
+
+    def get_usage(self) -> str:
+        return "ci"
+
+
+class VersionCommand(BaseCommand):
+    """Command for showing current version."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute version command."""
+        print("\nCurrent version:")
+        
+        import re
+        with open("setup.py", "r") as f:
+            content = f.read()
+            match = re.search(r'version="(\d+\.\d+\.\d+)"', content)
+            if match:
+                print(match.group(1))
+                return CommandResult(success=True, message=f"Version: {match.group(1)}", data=match.group(1))
+        
+        return CommandResult(success=False, message="Version not found")
+
+    def get_help(self) -> str:
+        return """\nShow current version\n\nUsage:\n  version\n\nExamples:\n  version\n"""
+
+    def get_usage(self) -> str:
+        return "version"
+
+
+class BumpPatchCommand(BaseCommand):
+    """Command for bumping patch version."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute bump-patch command."""
+        print("\nBumping patch version...")
+        
+        import re
+        with open("setup.py", "r") as f:
+            content = f.read()
+        
+        match = re.search(r'version="(\d+)\.(\d+)\.(\d+)"', content)
+        if match:
+            major, minor, patch = int(match.group(1)), int(match.group(2)), int(match.group(3))
+            new_version = f"{major}.{minor}.{patch + 1}"
+            content = re.sub(r'version="\d+\.\d+\.\d+"', f'version="{new_version}"', content)
+            with open("setup.py", "w") as f:
+                f.write(content)
+            print(f"Version bumped to {new_version}")
+            return CommandResult(success=True, message=f"Version bumped to {new_version}", data=new_version)
+        
+        return CommandResult(success=False, message="Version not found")
+
+    def get_help(self) -> str:
+        return """\nBump patch version (x.y.z -> x.y.z+1)\n\nUsage:\n  bump-patch\n\nExamples:\n  bump-patch\n"""
+
+    def get_usage(self) -> str:
+        return "bump-patch"
+
+
+class BumpMinorCommand(BaseCommand):
+    """Command for bumping minor version."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute bump-minor command."""
+        print("\nBumping minor version...")
+        
+        import re
+        with open("setup.py", "r") as f:
+            content = f.read()
+        
+        match = re.search(r'version="(\d+)\.(\d+)\.(\d+)"', content)
+        if match:
+            major, minor, patch = int(match.group(1)), int(match.group(2)), int(match.group(3))
+            new_version = f"{major}.{minor + 1}.0"
+            content = re.sub(r'version="\d+\.\d+\.\d+"', f'version="{new_version}"', content)
+            with open("setup.py", "w") as f:
+                f.write(content)
+            print(f"Version bumped to {new_version}")
+            return CommandResult(success=True, message=f"Version bumped to {new_version}", data=new_version)
+        
+        return CommandResult(success=False, message="Version not found")
+
+    def get_help(self) -> str:
+        return """\nBump minor version (x.y.z -> x.y+1.0)\n\nUsage:\n  bump-minor\n\nExamples:\n  bump-minor\n"""
+
+    def get_usage(self) -> str:
+        return "bump-minor"
+
+
+class BumpMajorCommand(BaseCommand):
+    """Command for bumping major version."""
+
+    def __init__(self, api: FreeLLMAPI):
+        super().__init__(api)
+
+    async def execute(self, args: List[str]) -> CommandResult:
+        """Execute bump-major command."""
+        print("\nBumping major version...")
+        
+        import re
+        with open("setup.py", "r") as f:
+            content = f.read()
+        
+        match = re.search(r'version="(\d+)\.(\d+)\.(\d+)"', content)
+        if match:
+            major, minor, patch = int(match.group(1)), int(match.group(2)), int(match.group(3))
+            new_version = f"{major + 1}.0.0"
+            content = re.sub(r'version="\d+\.\d+\.\d+"', f'version="{new_version}"', content)
+            with open("setup.py", "w") as f:
+                f.write(content)
+            print(f"Version bumped to {new_version}")
+            return CommandResult(success=True, message=f"Version bumped to {new_version}", data=new_version)
+        
+        return CommandResult(success=False, message="Version not found")
+
+    def get_help(self) -> str:
+        return """\nBump major version (x.y.z -> x+1.0.0)\n\nUsage:\n  bump-major\n\nExamples:\n  bump-major\n"""
+
+    def get_usage(self) -> str:
+        return "bump-major"
+
+
 # Command registry
 COMMANDS = {
     "chat": ChatCommand,
@@ -741,6 +1462,31 @@ COMMANDS = {
     "health": HealthCommand,
     "config": ConfigCommand,
     "stats": StatsCommand,
+    "install": InstallCommand,
+    "dev-install": DevInstallCommand,
+    "requirements": RequirementsCommand,
+    "test": TestCommand,
+    "test-cov": TestCovCommand,
+    "lint": LintCommand,
+    "format": FormatCommand,
+    "check": CheckCommand,
+    "clean": CleanCommand,
+    "build": BuildCommand,
+    "publish": PublishCommand,
+    "publish-test": PublishTestCommand,
+    "docs": DocsCommand,
+    "server": ServerCommand,
+    "server-reload": ServerReloadCommand,
+    "interactive": InteractiveCommand,
+    "benchmark-all": BenchmarkAllCommand,
+    "setup-config": SetupConfigCommand,
+    "venv": VenvCommand,
+    "activate": ActivateCommand,
+    "ci": CICommand,
+    "version": VersionCommand,
+    "bump-patch": BumpPatchCommand,
+    "bump-minor": BumpMinorCommand,
+    "bump-major": BumpMajorCommand,
 }
 
 __all__ = ["COMMANDS", "CommandResult", "BaseCommand"]

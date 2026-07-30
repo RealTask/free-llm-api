@@ -148,9 +148,10 @@ if __name__ == "__main__":
     import uvicorn
     
     # Run the server
+    # Note: For production, bind to a specific IP (e.g., 127.0.0.1) instead of 0.0.0.0
     uvicorn.run(
         "free_llm_api.web.app:app",
-        host="0.0.0.0",
+        host="127.0.0.1",  # Changed from 0.0.0.0 for security
         port=8000,
         reload=True,
         log_level="info",

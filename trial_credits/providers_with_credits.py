@@ -205,7 +205,8 @@ def get_providers_by_credit_amount(min_credits: Optional[float] = None, max_cred
         credit_str = provider.credits.replace("$", "").replace("/month", "").replace("M", "000000")
         try:
             credit_value = float(credit_str.split()[0])  # Take first part if there are spaces
-        except:
+        except (ValueError, IndexError):
+            logger.warning(f"Failed to parse credits for provider {provider.name}: {provider.credits}")
             continue
         
         if (min_credits is None or credit_value >= min_credits) and \
